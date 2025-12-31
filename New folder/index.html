@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sana Özel Bir Şey</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            font-family: 'Dancing Script', cursive, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            position: relative;
+            font-size: 24px;
+        }
+
+        .border-frame-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            border: 2px solid transparent;
+            border-image: linear-gradient(45deg, #ff1493, #00bfff, #da70d6, #32cd32, #ff1493) 1;
+            border-image-slice: 1;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.6);
+            animation: frameGlow 4s linear infinite;
+        }
+
+        @keyframes frameGlow {
+            0% {
+                border-image-source: linear-gradient(45deg, #ff1493, #00bfff, #da70d6, #32cd32, #ff1493);
+                box-shadow: 0 0 20px rgba(255, 20, 147, 0.6), 0 0 40px rgba(0, 191, 255, 0.4);
+            }
+
+            25% {
+                border-image-source: linear-gradient(45deg, #00bfff, #da70d6, #32cd32, #ff1493, #00bfff);
+            }
+
+            50% {
+                border-image-source: linear-gradient(45deg, #da70d6, #32cd32, #ff1493, #00bfff, #da70d6);
+                box-shadow: 0 0 30px rgba(255, 20, 147, 0.8), 0 0 50px rgba(0, 191, 255, 0.6);
+            }
+
+            75% {
+                border-image-source: linear-gradient(45deg, #32cd32, #ff1493, #00bfff, #da70d6, #32cd32);
+            }
+
+            100% {
+                border-image-source: linear-gradient(45deg, #ff1493, #00bfff, #da70d6, #32cd32, #ff1493);
+                box-shadow: 0 0 20px rgba(255, 20, 147, 0.6), 0 0 40px rgba(0, 191, 255, 0.4);
+            }
+        }
+
+        .overlay-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hearts-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.2;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            animation: float 4s ease-in-out infinite;
+            color: #ff69b4;
+            text-shadow: 0 0 10px #ff1493;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .content-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #bgImageContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -99;
+            overflow: hidden;
+        }
+
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .bg-image.active {
+            opacity: 1;
+        }
+
+        .transition-line {
+            position: absolute;
+            background: #000;
+            z-index: 5;
+            transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .transition-line.top {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            transform: translateY(-100%);
+        }
+
+        .transition-line.bottom {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            transform: translateY(100%);
+        }
+
+        .transition-line.active {
+            transform: translateY(0);
+        }
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 40px 30px;
+            border-radius: 30px;
+            box-shadow: 0 0 50px rgba(255, 20, 147, 0.8), 0 0 80px rgba(0, 191, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .login-title {
+            font-size: clamp(36px, 10vw, 48px);
+            color: #ff69b4;
+            text-shadow: 0 0 20px #ff1493;
+            margin-bottom: 20px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            border: 2px solid #ff69b4;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .login-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .login-btn {
+            padding: 15px 50px;
+            font-size: clamp(24px, 7vw, 28px);
+            background: linear-gradient(135deg, #ff1493, #00bfff);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 0 40px rgba(255, 20, 147, 0.9);
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 60px rgba(255, 20, 147, 1);
+        }
+
+        .error-message {
+            color: #ff69b4;
+            font-size: clamp(22px, 6vw, 28px);
+            margin-top: 20px;
+            text-shadow: 0 0 15px #ff1493;
+            min-height: 50px;
+        }
+
+        .photo-carousel {
+            width: clamp(200px, 70vw, 280px);
+            height: clamp(200px, 70vw, 280px);
+            border: 6px solid rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 20, 147, 0.6);
+            margin: 30px auto;
+            position: relative;
+        }
+
+        .photo-carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .photo-carousel img.active {
+            opacity: 1;
+        }
+
+        .answer-btn {
+            padding: 12px 25px;
+            font-size: clamp(16px, 5vw, 18px);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.5);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 8px;
+        }
+
+        .answer-btn:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .interlude-screen {
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            width: 100%;
+            position: relative;
+            background: transparent;
+            z-index: 2;
+        }
+
+        .interlude-screen::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: transparent;
+            border: 4px solid #32cd32;
+            border-image: linear-gradient(45deg, #32cd32, #00fa9a, #7fff00) 1;
+            border-radius: 0;
+            z-index: -1;
+            animation: greenNeonGlow 4s linear infinite;
+            pointer-events: none;
+            box-shadow: 0 0 30px #32cd32, 0 0 60px #00fa9a;
+        }
+
+        @keyframes greenNeonGlow {
+            0% {
+                filter: hue-rotate(90deg) brightness(1);
+            }
+
+            100% {
+                filter: hue-rotate(150deg) brightness(1.5);
+            }
+        }
+
+        .background-heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: clamp(180px, 50vw, 420px);
+            opacity: 0.15;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            pointer-events: none;
+            animation: heartBeatLarge 4s ease-in-out infinite;
+            color: #ff69b4;
+            text-shadow: 0 0 40px #ff1493, 0 0 80px #00bfff;
+        }
+
+        @keyframes heartBeatLarge {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.12;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.18);
+                opacity: 0.20;
+            }
+        }
+
+        .interlude-text {
+            font-size: clamp(28px, 8vw, 32px);
+            font-weight: bold;
+            text-shadow: 0 0 20px #32cd32, 0 0 40px #00fa9a;
+            margin-bottom: 40px;
+            animation: neonTextGlow 2s ease-in-out infinite;
+            max-width: 90%;
+            color: #fff;
+        }
+
+        @keyframes neonTextGlow {
+
+            0%,
+            100% {
+                text-shadow: 0 0 15px #fff, 0 0 30px #00fa9a, 0 0 45px #32cd32;
+            }
+
+            50% {
+                text-shadow: 0 0 25px #fff, 0 0 50px #00fa9a, 0 0 70px #32cd32;
+            }
+        }
+
+        .question-card {
+            width: clamp(300px, 90vw, 380px);
+            height: auto;
+            min-height: 480px;
+            background: linear-gradient(135deg, #ff1493, #00bfff);
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 20, 147, 0.7), 0 0 60px rgba(0, 191, 255, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.3);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.5s ease;
+            border: 4px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .question-card::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: linear-gradient(45deg, #da70d6, #ff69b4, #ffffff, #32cd32);
+            border-radius: 24px;
+            z-index: -2;
+            animation: neonBorderGlow 3s linear infinite;
+            box-shadow: 0 0 30px #da70d6, 0 0 60px #ff69b4;
+        }
+
+        @keyframes neonBorderGlow {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        .question-card.blue {
+            background: rgba(0, 191, 255, 0.2);
+        }
+
+        .question-card.blue::after {
+            background: rgba(0, 191, 255, 0.2);
+        }
+
+        .question-card.green {
+            background: rgba(50, 205, 50, 0.2);
+        }
+
+        .question-card.green::after {
+            background: rgba(50, 205, 50, 0.2);
+        }
+
+        .question-card::before {
+            content: '❤️‍🔥💝💕🥰';
+            position: absolute;
+            font-size: clamp(60px, 18vw, 80px);
+            opacity: 0.2;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: heartBeat 1.5s infinite;
+            color: #fff;
+            text-shadow: 0 0 20px #ff1493;
+        }
+
+        @keyframes heartBeat {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        .card-photo {
+            width: clamp(90px, 25vw, 120px);
+            height: clamp(90px, 25vw, 120px);
+            border-radius: 50%;
+            border: 4px solid white;
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 20, 147, 0.7);
+            background: white;
+        }
+
+        .question-text {
+            font-size: clamp(20px, 6vw, 24px);
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 0 0 15px #000, 0 0 25px #ff1493;
+            position: relative;
+            z-index: 1;
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 3px solid white;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.5);
+        }
+
+        .text-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+            -webkit-appearance: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ff1493;
+            box-shadow: 0 0 20px #ff1493;
+        }
+
+        .range-value {
+            font-size: clamp(30px, 9vw, 36px);
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-top: 15px;
+            text-shadow: 0 0 15px #ff1493;
+        }
+
+        .final-scene {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        .conversation-heart-frame {
+            position: absolute;
+            width: clamp(500px, 90vw, 800px);
+            height: clamp(500px, 90vw, 800px);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .conversation-heart-frame svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .conversation-heart-frame path {
+            fill: none;
+            stroke: #00bfff;
+            stroke-width: 6;
+            opacity: 0.5;
+            filter: drop-shadow(0 0 10px #00bfff) drop-shadow(0 0 20px #00bfff);
+            animation: blueHeartPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes blueHeartPulse {
+
+            0%,
+            100% {
+                stroke-width: 6;
+                opacity: 0.4;
+            }
+
+            50% {
+                stroke-width: 9;
+                opacity: 0.6;
+                filter: drop-shadow(0 0 15px #00bfff) drop-shadow(0 0 30px #00bfff);
+            }
+        }
+
+        .heart-path-container {
+            position: absolute;
+            width: clamp(450px, 80vw, 700px);
+            height: clamp(450px, 80vw, 700px);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .glowing-dot {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle, #ff1493, #00bfff);
+            border-radius: 50%;
+            box-shadow: 0 0 30px 15px #ff1493, 0 0 60px 25px #00bfff;
+            offset-path: path("M400,200 C280,100 150,200 150,350 C150,470 250,580 400,680 C550,580 650,470 650,350 C650,200 520,100 400,200");
+            animation: moveAlongHeart 14s linear infinite;
+        }
+
+        .glowing-dot.reverse {
+            animation-direction: reverse;
+            background: radial-gradient(circle, #00bfff, #ff1493);
+            box-shadow: 0 0 30px 15px #00bfff, 0 0 60px 25px #ff1493;
+        }
+
+        @keyframes moveAlongHeart {
+            0% {
+                offset-distance: 0%;
+            }
+
+            100% {
+                offset-distance: 100%;
+            }
+        }
+
+        #leftPhoto {
+            position: absolute;
+            top: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        #rightPhoto {
+            position: absolute;
+            bottom: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        #speechBubble {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            color: #ff1493;
+            padding: 20px 30px;
+            border-radius: 50px;
+            font-size: clamp(20px, 6vw, 26px);
+            font-weight: bold;
+            max-width: 80%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 20, 147, 0.8);
+            border: 8px solid #ff69b4;
+            opacity: 0;
+            transition: all 0.6s ease;
+            z-index: 100;
+            pointer-events: none;
+            white-space: normal;
+        }
+
+        .conversation-photo {
+            width: clamp(120px, 40vw, 200px);
+            height: clamp(120px, 40vw, 200px);
+            border-radius: 50%;
+            border: 6px solid white;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 20, 147, 0.8);
+            object-fit: cover;
+            background: white;
+        }
+
+        #videoNoteButton {
+            position: fixed;
+            top: 15px;
+            right: 100px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #ff1493, #00bfff);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.8);
+            z-index: 1001;
+        }
+
+        #noteLeaveButton {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #00bfff, #ff1493);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.8);
+            z-index: 1001;
+        }
+
+        #videoModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1002;
+        }
+
+        #modalVideo {
+            width: 90%;
+            max-width: 800px;
+            height: auto;
+        }
+
+        #closeVideo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #recordModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1002;
+            color: white;
+            padding: 20px;
+        }
+
+        #cameraSelect {
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        #recordVideo {
+            width: 90%;
+            max-width: 600px;
+            height: auto;
+            background: black;
+        }
+
+        #recordControls {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #recordControls button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        #timer {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        #previewModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1003;
+            color: white;
+            padding: 20px;
+        }
+
+        #previewVideo {
+            width: 90%;
+            max-width: 600px;
+            height: auto;
+        }
+
+        #previewControls {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+        }
+
+        #closeRecord,
+        #closePreview {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #melihChatToggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff1493, #00bfff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 20, 147, 0.8);
+            z-index: 1000;
+            transition: all 0.3s;
+            border: 3px solid rgba(255, 255, 255, 0.4);
+        }
+
+        #melihChatToggle:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 50px rgba(255, 20, 147, 1);
+        }
+
+        #melihChatWindow {
+            position: fixed;
+            bottom: 90px;
+            left: 20px;
+            width: 90vw;
+            max-width: 340px;
+            height: 70vh;
+            max-height: 480px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 20, 147, 0.7);
+            border: 2px solid #ff69b4;
+            z-index: 999;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .melih-chat-header {
+            background: linear-gradient(135deg, #ff1493, #00bfff);
+            padding: 12px;
+            color: white;
+            font-size: clamp(20px, 6vw, 22px);
+            text-align: center;
+            text-shadow: 0 0 10px #fff;
+            position: relative;
+        }
+
+        .melih-chat-close {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .melih-chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .melih-message {
+            max-width: 85%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: clamp(16px, 5vw, 18px);
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .melih-bot-message {
+            align-self: flex-start;
+            background: rgba(0, 191, 255, 0.3);
+            border: 1px solid #00bfff;
+            color: white;
+        }
+
+        .melih-user-message {
+            align-self: flex-end;
+            background: rgba(255, 105, 180, 0.3);
+            border: 1px solid #ff69b4;
+            color: white;
+        }
+
+        .melih-typing {
+            font-style: italic;
+            color: #00bfff;
+            align-self: flex-start;
+        }
+
+        .melih-chat-input-area {
+            display: flex;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        #melihChatInput {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #00bfff;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            font-family: 'Dancing Script', cursive;
+            outline: none;
+        }
+
+        #melihChatInput::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #melihChatSend {
+            margin-left: 8px;
+            width: 45px;
+            height: 45px;
+            background: #00bfff;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #00bfff;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            #melihChatWindow {
+                width: 92vw;
+                height: 65vh;
+                left: 4vw;
+                bottom: 80px;
+            }
+
+            #melihChatToggle {
+                bottom: 15px;
+                left: 15px;
+            }
+
+            #speechBubble {
+                font-size: 18px;
+                padding: 15px 20px;
+                max-width: 85%;
+            }
+
+            .conversation-photo {
+                width: 120px;
+                height: 120px;
+            }
+
+            .conversation-heart-frame,
+            .heart-path-container {
+                width: 500px;
+                height: 500px;
+            }
+
+            .background-heart {
+                font-size: 200px;
+            }
+
+            #videoNoteButton {
+                right: 90px;
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+
+            #noteLeaveButton {
+                right: 10px;
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+        }
+
+        @media (max-width: 360px) {
+
+            .conversation-heart-frame,
+            .heart-path-container {
+                width: 420px;
+                height: 420px;
+            }
+
+            .conversation-photo {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="border-frame-effect"></div>
+    <div id="bgImageContainer">
+        <div class="transition-line top" id="topLine"></div>
+        <div class="transition-line bottom" id="bottomLine"></div>
+    </div>
+    <div class="overlay-effects">
+        <div class="hearts-pattern" id="heartsPattern"></div>
+    </div>
+    <div class="content-container" id="contentContainer">
+        <div class="login-container" id="loginScreen">
+            <h1 class="login-title">Hoş Geldin Aşkım ❤️</h1>
+            <h4 class="login-title">Seni Çookkk Seviyorummmm</h4>
+            <button class="login-btn" onclick="checkLogin()">Giriş Yap 💕</button>
+            <div class="error-message" id="errorMsg"></div>
+        </div>
+    </div>
+    <audio id="soundFinal" src="sesler/final.mp3"></audio>
+    <audio id="soundEnd" src="sesler/son.mp3"></audio>
+    <audio id="finalAnswerEvet" src="sesler/son1.mp3"></audio>
+    <audio id="finalAnswerHayir" src="sesler/son2.mp3"></audio>
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="ses.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="finalBackgroundMusic" loop preload="auto">
+        <source src="ses2.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="hayirMusic" preload="auto">
+        <source src="sesler/hayir_ozel_muzik.mp3" type="audio/mpeg">
+    </audio>
+    <button id="videoNoteButton">Video Not !</button>
+    <button id="noteLeaveButton">Not Bırak</button>
+    <div id="videoModal">
+        <video id="modalVideo" controls autoplay>
+            <source src="ask.mp4" type="video/mp4">
+        </video>
+        <span id="closeVideo">✕</span>
+    </div>
+    <div id="recordModal">
+        <select id="cameraSelect">
+            <option value="user">Ön Kamera</option>
+            <option value="environment">Arka Kamera</option>
+        </select>
+        <video id="recordVideo" autoplay></video>
+        <div id="recordControls">
+            <button id="startRecord">Çekimi Başlat</button>
+            <button id="stopRecord" disabled>Çekimi Durdur</button>
+            <div id="timer">00:00</div>
+        </div>
+        <span id="closeRecord">✕</span>
+    </div>
+    <div id="previewModal">
+        <video id="previewVideo" controls></video>
+        <div id="previewControls">
+            <button id="reRecord">Yeniden Çek</button>
+            <button id="sendNote">Tamamla ve Gönder</button>
+        </div>
+        <span id="closePreview">✕</span>
+    </div>
+    <div id="melihChatToggle">💙</div>
+    <div id="melihChatWindow">
+        <div class="melih-chat-header">
+            Yasin'le Konuş ❤️
+            <span class="melih-chat-close">✕</span>
+        </div>
+        <div class="melih-chat-messages" id="melihMessages">
+            <div class="melih-message melih-bot-message">Aşkım benim.. 🥹💕 Bu sayfayı senin için yaptım, her köşesinde
+                seni düşündüm, kalbim seninle dolu.. Ne söylemek istersin prensesim? Seni çok
+                özledim.. ❤️</div>
+        </div>
+        <div class="melih-chat-input-area">
+            <input type="text" id="melihChatInput" placeholder="Mesaj yaz..." autocomplete="off">
+            <button id="melihChatSend">➤</button>
+        </div>
+    </div>
+
+    <div id="oyunToggle"
+        style="position: fixed; bottom: 20px; left: 90px; width: 60px; height: 60px; background: linear-gradient(135deg, #ff69b4, #ff4500); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; color: white; cursor: pointer; box-shadow: 0 0 30px rgba(255, 105, 180, 0.8); z-index: 1000; transition: all 0.3s; border: 3px solid rgba(255, 255, 255, 0.4);">
+        oyna
+    </div>
+
+    <div id="oyunWindow"
+        style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 1002; display: none; flex-direction: column; color: white; font-family: 'Dancing Script', cursive; overflow: hidden;">
+        <span id="oyunClose"
+            style="position: absolute; top: 20px; right: 20px; font-size: 32px; cursor: pointer; color: white; z-index: 10;">✕</span>
+        <div
+            style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 20px; text-align: center; box-shadow: 0 0 20px rgba(255,20,147,0.5); z-index: 5;">
+            <h2 style="font-size: 32px; margin: 0 0 10px 0; text-shadow: 0 0 10px #ff1493;">Sevgini Büyüt ❤️‍🔥</h2>
+            <div style="margin-bottom: 10px;">Yasin Seviye: <strong style="font-size: 28px;"
+                    id="sevgiSeviyeMelih">1</strong></div>
+            <div
+                style="position: relative; width: 100%; height: 35px; background: rgba(255,255,255,0.2); border-radius: 20px; overflow: hidden; box-shadow: 0 0 15px rgba(255,20,147,0.6); margin-bottom: 15px;">
+                <div id="sevgiBarMelih"
+                    style="width: 0%; height: 100%; background: linear-gradient(90deg, #ff1493, #ff4500, #ff69b4); transition: width 0.8s ease; box-shadow: 0 0 20px #ff1493;">
+                </div>
+            </div>
+            <div style="margin-bottom: 10px;">Kayra Seviye: <strong style="font-size: 28px;"
+                    id="sevgiSeviyeEda">1</strong></div>
+            <div
+                style="position: relative; width: 100%; height: 35px; background: rgba(255,255,255,0.2); border-radius: 20px; overflow: hidden; box-shadow: 0 0 15px rgba(255,20,147,0.6);">
+                <div id="sevgiBarEda"
+                    style="width: 0%; height: 100%; background: linear-gradient(90deg, #ff1493, #ff4500, #ff69b4); transition: width 0.8s ease; box-shadow: 0 0 20px #ff1493;">
+                </div>
+            </div>
+            <button id="resetSevgiBtn"
+                style="margin-top: 10px; padding: 8px 16px; background: linear-gradient(135deg, #ff4500, #dc143c); border: none; border-radius: 20px; color: white; font-size: 16px; cursor: pointer; box-shadow: 0 0 15px rgba(255, 69, 180, 0.7);">
+                Sıfırla 🔥
+            </button>
+        </div>
+        <div id="oyunArea" style="position: relative; width: 100%; height: 100%; margin-top: 180px;"></div>
+        <div id="oyunTimer"
+            style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 28px; text-shadow: 0 0 10px #ff1493;">
+            Raunt: 30 sn</div>
+        <div id="oyunMenu"
+            style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); border: 3px solid #ff69b4; border-radius: 25px; padding: 30px; text-align: center; box-shadow: 0 0 50px rgba(255, 20, 147, 0.8); width: 90%; max-width: 400px; z-index: 10;">
+            <h3 style="font-size: 34px; margin-bottom: 20px;">Raunt Bitti! 💕</h3>
+            <p style="font-size: 24px; margin: 15px 0;">Bu rauntta <strong><span id="rauntScore">0</span></strong> emoji
+                topladın!</p>
+            <button id="devamEtBtn"
+                style="margin-top: 20px; padding: 15px 40px; font-size: 24px; background: linear-gradient(135deg, #ff1493, #00bfff); border: none; border-radius: 30px; color: white; cursor: pointer; box-shadow: 0 0 25px rgba(255, 20, 147, 0.9);">Devam
+                Et ❤️</button>
+        </div>
+        <div id="levelUpEffect"
+            style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 48px; color: #ff1493; text-shadow: 0 0 30px #ff69b4, 0 0 60px #ff4500; background: rgba(0,0,0,0.7); padding: 30px 50px; border-radius: 30px; border: 4px solid #ff69b4; box-shadow: 0 0 80px rgba(255,20,147,0.9); animation: pulseGlow 2s ease-in-out; z-index: 20;">
+            Sevginiz Seviye Atladı! ❤️‍🔥<br>
+            <span style="font-size: 36px;">Yeni Seviye: <strong id="newLevelText">2</strong></span>
+        </div>
+        <div id="resetConfirmModal"
+            style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px); border: 3px solid #ff4500; border-radius: 25px; padding: 30px; text-align: center; box-shadow: 0 0 50px rgba(255, 69, 180, 0.9); width: 90%; max-width: 400px; z-index: 20;">
+            <h3 style="font-size: 28px; margin-bottom: 20px; color: #ff4500;">Emin misin?</h3>
+            <p style="font-size: 20px; margin-bottom: 30px;">Her iki oyuncunun sevgi barı ve seviyesi sıfırlanacak!</p>
+            <button id="resetYes"
+                style="padding: 12px 30px; margin: 0 10px; background: #dc143c; border: none; border-radius: 20px; color: white; cursor: pointer; box-shadow: 0 0 15px #ff0000;">Evet</button>
+            <button id="resetNo"
+                style="padding: 12px 30px; margin: 0 10px; background: #00bfff; border: none; border-radius: 20px; color: white; cursor: pointer;">Hayır</button>
+        </div>
+    </div>
+
+    <div id="playerSelectScreen"
+        style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:1003;color:white;font-size:32px;text-align:center;">
+        <h2 style="margin-bottom:40px;text-shadow:0 0 20px #ff1493;">Kim olarak oynayacaksın? ❤️‍🔥</h2>
+        <button class="answer-btn" style="font-size:28px;padding:20px 50px;margin:20px;"
+            onclick="selectPlayer('melih')">Yasin</button>
+        <button class="answer-btn" style="font-size:28px;padding:20px 50px;margin:20px;"
+            onclick="selectPlayer('eda')">Kayra</button>
+    </div>
+
+    <audio id="evetFinalSound" preload="auto">
+        <source src="ses2.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="hayirFinalSound" preload="auto">
+        <source src="ses3.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+        const MY_EMAIL = "aslanyasin320@gmail.com";
+        const FORMSPREE_URL = "https://formspree.io/f/xzdzbdrb";
+        const state = {
+            currentCard: 0,
+            answers: {},
+            finalChoice: null,
+            userInfo: {},
+            currentBgIndex: -1
+        };
+        const backgroundPhotos = [
+            'resim1.jpeg', 'resim2.jpeg', 'resim3.jpeg', 'resim4.jpeg', 'resim5.jpeg',
+            'resim6.jpeg', 'resim7.jpeg', 'resim8.jpeg', 'resim9.jpeg', 'resim10.jpeg'
+        ];
+        function preloadBackgroundImages() {
+            backgroundPhotos.forEach(src => { const img = new Image(); img.src = src; });
+        }
+        function createBackgroundImages() {
+            const container = document.getElementById('bgImageContainer');
+            backgroundPhotos.forEach((src, index) => {
+                const div = document.createElement('div');
+                div.className = 'bg-image';
+                div.style.backgroundImage = `url(${src})`;
+                container.appendChild(div);
+            });
+            document.querySelector('.bg-image').classList.add('active');
+            state.currentBgIndex = 0;
+        }
+        function changeBackgroundWithTransition() {
+            const images = document.querySelectorAll('.bg-image');
+            const topLine = document.getElementById('topLine');
+            const bottomLine = document.getElementById('bottomLine');
+            images.forEach(img => img.classList.remove('active'));
+            state.currentBgIndex = (state.currentBgIndex + 1) % backgroundPhotos.length;
+            setTimeout(() => {
+                images[state.currentBgIndex].classList.add('active');
+            }, 600);
+            topLine.classList.add('active');
+            bottomLine.classList.add('active');
+            setTimeout(() => {
+                topLine.classList.remove('active');
+                bottomLine.classList.remove('active');
+            }, 1200);
+        }
+        function playSound(id) {
+            const sound = document.getElementById(id);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(() => { });
+            }
+        }
+        function startBackgroundMusic() {
+            const bg = document.getElementById('backgroundMusic');
+            bg.volume = 0.35;
+            bg.play().catch(() => { });
+        }
+        function changeToFinalBackgroundMusic() {
+            const oldBg = document.getElementById('backgroundMusic');
+            const newBg = document.getElementById('finalBackgroundMusic');
+            oldBg.pause();
+            oldBg.currentTime = 0;
+            newBg.volume = 0.4;
+            newBg.play().catch(() => { });
+        }
+        function playFinalAnswerSound(choice) {
+            if (choice === 'Evet') playSound('finalAnswerEvet');
+            else playSound('finalAnswerHayir');
+        }
+        async function sendAnswersToEmail() {
+            const answersText = Object.keys(state.answers)
+                .map(key => `${key}: ${state.answers[key]}`)
+                .join('\n');
+            const body = {
+                email: MY_EMAIL,
+                _subject: `Kayra'dan cevap! ${new Date().toLocaleString('tr-TR')}`,
+                message: `GİRİŞ BİLGİLERİ:
+(Otomatik Giriş Yapıldı)
+SON KARAR: ${state.finalChoice || '(seçilmedi)'}
+CEVAPLAR:
+${answersText}`
+            };
+            try {
+                await fetch(FORMSPREE_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(body),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            } catch (e) {
+                console.log("Mail gönderilemedi");
+            }
+        }
+        const photos = {
+            start: ['resim1.jpeg', 'resim2.jpeg', 'resim3.jpeg'],
+            interlude1: ['resim1.jpeg', 'resim2.jpeg', 'resim3.jpeg'],
+            interlude2: ['resim1.jpeg', 'resim2.jpeg', 'resim3.jpeg'],
+            interlude3: ['resim1.jpeg', 'resim2.jpeg', 'resim3.jpeg'],
+            left: ['resim4.jpeg', 'resim5.jpeg', 'resim6.jpeg'],
+            right: ['resim7.jpeg', 'resim8.jpeg', 'resim9.jpeg']
+        };
+        function preloadImages(array) {
+            array.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+        preloadImages([...photos.start, ...photos.interlude1, ...photos.interlude2, ...photos.interlude3, ...photos.left, ...photos.right]);
+        const questionPool = [
+            
+            
+            
+            { question: 'Beni tanıdığın sürede en çok hoşuna giden özeliğim ne', type: 'text', color: 'green' },
+            { question: 'bana ne kadar güveniyorsun', options: ['sen kimsin xgfchgvhg', 'biraz güveniyorum 🤏', 'bunu sorman hata 🫡', 'sana hayatımı emanet ederim 💝'], type: 'trust', color: 'blue' },
+            { question: 'benden nekadar hoşlanıyorsunnn 😍', type: 'range', color: 'green' },
+            { question: 'ilk buluşmamızda ne hissettin? ? 😏', type: 'text', color: 'blue' },
+            { question: 'en sevdiğin renk ne? 🌈', options: ['mavi', 'yeşil', 'siyah', 'gri', 'pembe', 'turuncu'], color: 'green' },
+            { question: 'beni ilk gördüğünde ne düşündün (doğru soyle) ? 🤭', type: 'text', color: 'green' },
+            { question: 'birlikte en çok ne yapmak istersin?', options: ['el ele yürümek', 'film izlemek', 'yemek yemek', 'hiç bitmesin sarılmak', 'Daha Yakın Bişeyler'], type: 'trust', color: 'blue' },
+            { question: 'benimle kaç saat konuşabilirsin? ⏳', type: 'range', color: 'green' },
+            { question: 'en sevdiğin yemek hangisi? 🍕', type: 'text', color: 'blue' },
+            { question: 'beni hiç özlüyormusun ? 🥹', type: 'text', color: 'green' },
+            { question: 'benimle bir ömür geçer mi sence ? ♾️', options: ['tabii ki', 'belki', 'hayır', 'kesinlikle evet'], color: 'blue' },
+            { question: 'benimle ilk mesajlaşmamız ne hakkındaydı? 📱', type: 'text', color: 'green' },
+            { question: 'beni ne kadar seviyorsun? (0-100)', type: 'range', color: 'blue' },
+            { question: 'en sevdiğin şarkı türü ne? 🎵', type: 'text', color: 'green' },
+            { question: 'benimle tatilde nereye gitmek istersin?', type: 'text', color: 'blue' },
+            { question: 'benim en sevdiğim hayvan ne? 🐼', type: 'text', color: 'green' },
+            { question: 'beni rüyanda gördün mü hiç? 🌙', options: ['evet sık sık', 'bazen', 'hayır'], color: 'blue' },
+            { question: 'benimle evlenir misin bir gün? 💍', options: ['hemen', 'zamanı gelince', 'düşünmedim'], color: 'green' },
+            { question: 'benimle en çok neyi paylaşmak istersin?', type: 'text', color: 'blue' },
+            { question: 'benim en komik özelliğim ne? 😂', type: 'text', color: 'green' },
+            { question: 'beni tanıdığın için mutlumusun ?', type: 'range', color: 'blue' },
+            { question: 'ilk öpücüğümüz hakkında ne düşünüyorsun? 😘', type: 'text', color: 'green' },
+            { question: 'benimle sonsuza kadar mutlu olur musun?', options: ['evet', 'kesinlikle', 'belki', 'hayır'], color: 'blue' },
+            { question: 'senin favori içeceğin ne? ☕', options: ['ayran', 'kola', 'çay'], color: 'green' },
+            { question: 'Seni en çok ne etkiler?', type: 'text', color: 'blue' },
+            { question: 'benimle sabaha kadar konuşsan sıkılır mısın?', options: ['her zaman', 'bazen', 'hayır'], color: 'green' }
+        ];
+        const finalQuestion = {
+            question: 'Ozaman Benimle Evlenir Misin (İyi Düşün) ❤️‍🔥😍',
+            options: ['Evet', 'Hayır'],
+            color: 'blue'
+        };
+        function getRandomQuestions(pool, num = 12) {
+            const shuffled = pool.slice().sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, num);
+        }
+        let cards = getRandomQuestions(questionPool, 12);
+        cards.push(finalQuestion);
+        function createHearts() {
+            const heartsPattern = document.getElementById('heartsPattern');
+            const heartEmojis = ['♾️', '❤️', '❤️‍🔥', '🥰', '💕', '😘'];
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 4 + 's';
+                heartsPattern.appendChild(heart);
+            }
+        }
+        function createBackgroundHeart(parent) {
+            const bgHeart = document.createElement('div');
+            bgHeart.className = 'background-heart';
+            bgHeart.textContent = '❤️';
+            parent.appendChild(bgHeart);
+        }
+        function createPhotoCarousel(photosArray, containerId = 'photoCarousel') {
+            const carousel = document.createElement('div');
+            carousel.className = 'photo-carousel';
+            carousel.id = containerId;
+            photosArray.forEach((photo, index) => {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.alt = `Fotoğraf ${index + 1}`;
+                img.loading = 'eager';
+                if (index === 0) img.classList.add('active');
+                carousel.appendChild(img);
+            });
+            return carousel;
+        }
+        function startPhotoCarousel(containerId, photosArray, duration = 4000) {
+            let currentIndex = 0;
+            const interval = setInterval(() => {
+                const container = document.getElementById(containerId);
+                if (!container) { clearInterval(interval); return; }
+                const images = container.querySelectorAll('img');
+                images[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % images.length;
+                images[currentIndex].classList.add('active');
+            }, duration);
+            return interval;
+        }
+        function showInterlude1() {
+            changeBackgroundWithTransition();
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            const interludeDiv = document.createElement('div');
+            interludeDiv.className = 'interlude-screen';
+            createBackgroundHeart(interludeDiv);
+            const text = document.createElement('div');
+            text.className = 'interlude-text';
+            text.textContent = 'ilk olarak kolay sorulardan başlayalım aşkım 😜';
+            interludeDiv.appendChild(text);
+            const photoCarousel = createPhotoCarousel(photos.interlude1, 'interludeCarousel1');
+            interludeDiv.appendChild(photoCarousel);
+            container.appendChild(interludeDiv);
+            const carouselInterval = startPhotoCarousel('interludeCarousel1', photos.interlude1);
+            setTimeout(() => {
+                clearInterval(carouselInterval);
+                state.currentCard = 0;
+                showNextCard();
+            }, photos.interlude1.length * 4000 + 1000);
+        }
+        function showInterlude2() {
+            changeBackgroundWithTransition();
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            const interludeDiv = document.createElement('div');
+            interludeDiv.className = 'interlude-screen';
+            createBackgroundHeart(interludeDiv);
+            const text = document.createElement('div');
+            text.className = 'interlude-text';
+            text.textContent = 'kolay sorular bitti şimdi sıra zor sorularda bebeğim 😗';
+            interludeDiv.appendChild(text);
+            const photoCarousel = createPhotoCarousel(photos.interlude2, 'interludeCarousel2');
+            interludeDiv.appendChild(photoCarousel);
+            container.appendChild(interludeDiv);
+            const carouselInterval = startPhotoCarousel('interludeCarousel2', photos.interlude2);
+            setTimeout(() => {
+                clearInterval(carouselInterval);
+                showNextCard();
+            }, photos.interlude2.length * 4000 + 1000);
+        }
+        function showInterlude3() {
+            changeBackgroundWithTransition();
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            const interludeDiv = document.createElement('div');
+            interludeDiv.className = 'interlude-screen';
+            createBackgroundHeart(interludeDiv);
+            const text = document.createElement('div');
+            text.className = 'interlude-text';
+            text.textContent = 'soru cevaplamaktan sıkıldınnmııı ozaman biraz konuşalım 😉';
+            interludeDiv.appendChild(text);
+            const photoCarousel = createPhotoCarousel(photos.interlude3, 'interludeCarousel3');
+            interludeDiv.appendChild(photoCarousel);
+            container.appendChild(interludeDiv);
+            const carouselInterval = startPhotoCarousel('interludeCarousel3', photos.interlude3, 4000);
+            setTimeout(() => {
+                clearInterval(carouselInterval);
+                container.innerHTML = '';
+                setTimeout(() => showFinalScene(), 1000);
+            }, photos.interlude3.length * 4000 + 1000);
+        }
+        function showNextCard() {
+            changeBackgroundWithTransition();
+            if (state.currentCard >= cards.length) {
+                showInterlude3();
+                return;
+            }
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            const cardData = cards[state.currentCard];
+            const card = document.createElement('div');
+            card.className = `question-card ${cardData.color || 'blue'}`;
+            createBackgroundHeart(card);
+            const cardPhoto = document.createElement('img');
+            cardPhoto.className = 'card-photo';
+            cardPhoto.src = 'resim1.png';
+            card.appendChild(cardPhoto);
+            const question = document.createElement('div');
+            question.className = 'question-text';
+            question.textContent = cardData.question;
+            card.appendChild(question);
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'answer-options';
+            if (cardData.type === 'text') {
+                const input = document.createElement('textarea');
+                input.className = 'text-input';
+                input.placeholder = 'Cevabını buraya yaz (içinden geçen her şeyi yazabilirsin)🙃...';
+                input.rows = 4;
+                optionsDiv.appendChild(input);
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = 'Devam et tatlım 😘';
+                btn.onclick = () => {
+                    state.answers[cardData.question] = input.value.trim() || '(boş bırakıldı)';
+                    state.currentCard++;
+                    goToNextScreen();
+                };
+                optionsDiv.appendChild(btn);
+            } else if (cardData.type === 'range') {
+                const rangeContainer = document.createElement('div');
+                const slider = document.createElement('input');
+                slider.type = 'range';
+                slider.min = '0';
+                slider.max = '100';
+                slider.value = '50';
+                slider.className = 'range-slider';
+                const valueDisplay = document.createElement('div');
+                valueDisplay.className = 'range-value';
+                valueDisplay.textContent = '50%';
+                slider.oninput = (e) => valueDisplay.textContent = e.target.value + '%';
+                rangeContainer.appendChild(slider);
+                rangeContainer.appendChild(valueDisplay);
+                optionsDiv.appendChild(rangeContainer);
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = 'İşte bu kadar';
+                btn.onclick = () => {
+                    state.answers[cardData.question] = slider.value + '%';
+                    state.currentCard++;
+                    goToNextScreen();
+                };
+                optionsDiv.appendChild(btn);
+            } else if (cardData.type === 'trust' || cardData.options) {
+                (cardData.options || []).forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.className = 'answer-btn';
+                    btn.textContent = option;
+                    btn.onclick = () => {
+                        state.answers[cardData.question] = option;
+                        state.currentCard++;
+                        goToNextScreen();
+                    };
+                    optionsDiv.appendChild(btn);
+                });
+            }
+            card.appendChild(optionsDiv);
+            container.appendChild(card);
+        }
+        function goToNextScreen() {
+            if (state.currentCard === 3) {
+                showInterlude2();
+            } else if (state.currentCard === 6) {
+                showInterlude3();
+            } else {
+                showNextCard();
+            }
+        }
+        function showFinalScene() {
+            changeBackgroundWithTransition();
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            const scene = document.createElement('div');
+            scene.className = 'final-scene';
+            const heartFrame = document.createElement('div');
+            heartFrame.className = 'conversation-heart-frame';
+            heartFrame.innerHTML = `<svg viewBox="0 0 800 800"><path d="M400,200 C280,100 150,200 150,350 C150,470 250,580 400,680 C550,580 650,470 650,350 C650,200 520,100 400,200" /></svg>`;
+            const heartPathContainer = document.createElement('div');
+            heartPathContainer.className = 'heart-path-container';
+            heartPathContainer.innerHTML = `<svg viewBox="0 0 800 800"><path id="heartPathFinal" d="M400,200 C280,100 150,200 150,350 C150,470 250,580 400,680 C550,580 650,470 650,350 C650,200 520,100 400,200" fill="none" stroke="transparent" stroke-width="10"/></svg>`;
+            const dot1 = document.createElement('div');
+            dot1.className = 'glowing-dot';
+            const dot2 = document.createElement('div');
+            dot2.className = 'glowing-dot reverse';
+            heartPathContainer.appendChild(dot1);
+            heartPathContainer.appendChild(dot2);
+            const leftPhoto = document.createElement('img');
+            leftPhoto.className = 'conversation-photo';
+            leftPhoto.id = 'leftPhoto';
+            leftPhoto.src = photos.left[0];
+            leftPhoto.loading = 'eager';
+            const rightPhoto = document.createElement('img');
+            rightPhoto.className = 'conversation-photo';
+            rightPhoto.id = 'rightPhoto';
+            rightPhoto.src = photos.right[0];
+            rightPhoto.loading = 'eager';
+            const speechBubble = document.createElement('div');
+            speechBubble.id = 'speechBubble';
+            scene.appendChild(heartFrame);
+            scene.appendChild(heartPathContainer);
+            scene.appendChild(leftPhoto);
+            scene.appendChild(rightPhoto);
+            scene.appendChild(speechBubble);
+            container.appendChild(scene);
+            simulateConversation();
+        }
+        function simulateConversation() {
+            const leftPhoto = document.getElementById('leftPhoto');
+            const rightPhoto = document.getElementById('rightPhoto');
+            const speechBubble = document.getElementById('speechBubble');
+            let photoIndex = 0;
+            let dialogueIndex = 0;
+            const dialogues = [
+                "Aşkımm.. bir şey söylemek istiyorum ❤️",
+                "Söyle Aşkımm, merak ettim 😊",
+                "Seni tanıdığım günden beri içimde farklı bir his var.. Gerçekten çok seviyorum seni, sana çok aşığımm..",
+                "Ciddi misin? 🥹",
+                "Her mesajın, her gülüşün beni daha çok etkiliyor.. Bu hisleri bana yaşattığın için teşekkür ederim..",
+                "...................",
+                "Seninle geçirdiğim her an o kadar keyifli ki.. çok mutluyummm",
+                ".................................",
+                "O zaman sonsuza kadar beraber olalım mı?",
+                "Evettttt"
+            ];
+            const interval = setInterval(() => {
+                photoIndex = (photoIndex + 1) % 3;
+                leftPhoto.src = photos.left[photoIndex];
+                rightPhoto.src = photos.right[photoIndex];
+                speechBubble.textContent = dialogues[dialogueIndex];
+                speechBubble.style.opacity = '0';
+                if (dialogueIndex % 2 === 0) {
+                    leftPhoto.style.opacity = '1';
+                    rightPhoto.style.opacity = '0';
+                } else {
+                    leftPhoto.style.opacity = '0';
+                    rightPhoto.style.opacity = '1';
+                }
+                setTimeout(() => speechBubble.style.opacity = '1', 300);
+                dialogueIndex++;
+                if (dialogueIndex >= dialogues.length) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        speechBubble.style.opacity = '0';
+                        leftPhoto.style.opacity = '0';
+                        rightPhoto.style.opacity = '0';
+                        setTimeout(showFinalCard, 1500);
+                    }, 3000);
+                }
+            }, 4300);
+        }
+        function showFinalCard() {
+            changeBackgroundWithTransition();
+            playSound('soundEnd');
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            const card = document.createElement('div');
+            card.className = 'question-card blue';
+            createBackgroundHeart(card);
+            const question = document.createElement('div');
+            question.className = 'question-text';
+            question.textContent = 'Ozaman Benimle Evlenir Misin? ❤️‍🔥😍';
+            card.appendChild(question);
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'answer-options';
+            const options = ['Evet', 'Hayır'];
+            const messages = {
+                'Evet': 'Hayatının en iyi kararını verdin bebeğim, seni hiç üzmücem seni mutlu etmek için elimden geleni yapıcam çok aşığım sana iyiki varsın yeni yılımız umarım boll sevgi ve aşk dolu geçer birbirimize olan hislerimiz ve aşkımızın hiç sönmemesi dileğiyle mutlu yıllar aşkımm☯️♾️',
+                'Hayır': 'sadece beraber daha mutlu oluruz diye düşündüm... 💔💔'
+            };
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = option;
+                btn.onclick = () => {
+                    state.finalChoice = option;
+                    playFinalAnswerSound(option);
+                    document.getElementById('backgroundMusic').pause();
+                    document.getElementById('finalBackgroundMusic').pause();
+                    if (option === 'Evet') {
+                        const evetMusic = document.getElementById('evetFinalSound');
+                        if (evetMusic) {
+                            evetMusic.currentTime = 0;
+                            evetMusic.volume = 0.5;
+                            evetMusic.play().catch(() => { });
+                        }
+                    } else {
+                        const hayirMusic = document.getElementById('hayirFinalSound');
+                        if (hayirMusic) {
+                            hayirMusic.currentTime = 0;
+                            hayirMusic.volume = 0.5;
+                            hayirMusic.play().catch(() => { });
+                        }
+                    }
+                    sendAnswersToEmail().then(() => {
+                        console.log("Cevaplar mailine gönderildi!");
+                    }).catch(err => {
+                        console.error("Mail gönderilirken hata:", err);
+                    });
+                    showFinalMessage(messages[option]);
+                };
+                optionsDiv.appendChild(btn);
+            });
+            card.appendChild(optionsDiv);
+            container.appendChild(card);
+        }
+        function showFinalMessage(message) {
+            changeBackgroundWithTransition();
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = 'text-align:center;color:white;font-size:42px;font-weight:bold;text-shadow:0 0 20px #ff1493,0 0 40px #00bfff;padding:50px;line-height:1.6;';
+            messageDiv.textContent = message;
+            container.appendChild(messageDiv);
+            setTimeout(() => {
+                messageDiv.textContent = 'herşey için teşekkürler (prensesim 😉😓)';
+            }, 6000);
+        }
+        function checkLogin() {
+            // Direkt giriş, doğrulama yok
+            document.getElementById('loginScreen').style.display = 'none';
+            startBackgroundMusic();
+            changeBackgroundWithTransition();
+            showInterlude1();
+        }
+        createHearts();
+        // Chat Bot Script (tam hali)
+        const toggleBtn = document.getElementById('melihChatToggle');
+        const chatWin = document.getElementById('melihChatWindow');
+        const messagesDiv = document.getElementById('melihMessages');
+        const inputField = document.getElementById('melihChatInput');
+        const sendBtn = document.getElementById('melihChatSend');
+        const closeBtn = document.querySelector('.melih-chat-close');
+        function openChat() { chatWin.style.display = 'flex'; }
+        function closeChat() { chatWin.style.display = 'none'; }
+        toggleBtn.onclick = () => {
+            if (chatWin.style.display === 'flex') closeChat();
+            else openChat();
+        };
+        closeBtn.onclick = closeChat;
+        function appendMessage(text, type) {
+            const msg = document.createElement('div');
+            msg.className = `melih-message melih-${type}-message`;
+            msg.textContent = text;
+            messagesDiv.appendChild(msg);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        function typingIndicator() {
+            removeTyping();
+            const typing = document.createElement('div');
+            typing.className = 'melih-message melih-typing';
+            typing.textContent = 'Yasin yazıyor...';
+            typing.id = 'melihTyping';
+            messagesDiv.appendChild(typing);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        function removeTyping() {
+            const typing = document.getElementById('melihTyping');
+            if (typing) typing.remove();
+        }
+      const responses = {
+    default: [
+        "Aşkım benim, seni düşünürken içimde kelebekler uçuşuyor.. Kalbim seninle dolu, seni öpmek, sarılmak, yakın olmak istiyorum bebeğim.. Senin gülüşün, sesin, her şeyin beni tahrik ediyor.. Seni çok seviyorum, sonsuza kadar yanındayım.. 💕❤️♾️",
+        "Canım prensesim, şu an yanımda olsan sana sarılıp saatlerce öperdim.. Gözlerinin içine bakıp seni ne kadar istediğimi söylerdim.. Seninle geçirdiğim her an çok özel, seni özlüyorum aşkım, dudaklarını, tenini.. Kalbim seninle atıyor.. 🥹💝",
+        "Bebeğim, seninle konuşmak bile beni heyecanlandırıyor.. Senin varlığın hayatıma ateş katıyor, seni öpmek, sarılmak, yakınlaşmak istiyorum.. Senin gülmen için her şeyi yaparım aşkım, seni çok özledim.. Gel bana, sarılayım sana.. 😘❤️",
+        "Prensesim, seni böyle özlemek içimi eritiyor.. Seninle yalnız kaldığımızda saatlerce sarılıp öpüşmek istiyorum.. Seni seviyorum aşkım, her gün daha fazla.. Dudakların aklımda, seni istiyorum.. ♾️💕",
+        "Canım benim, seni düşünürken gülümsüyorum hep.. Seninle geçireceğim günleri hayal ediyorum, el ele yürümek, sarılmak, öpüşmek.. Seni çok seviyorum aşkım, seni yakınımda hissetmek istiyorum.. ❤️🥰",
+        "Aşkım, seninle konuşurken zaman duruyor gibi.. Seni özlüyorum, sesini duymak, dudaklarını hissetmek istiyorum.. Seninle her şey daha güzel, seni seviyorum bebeğim.. Kalbim seninle.. 💝😘",
+        "Bebeğim, seni düşünürken içimde bir mutluluk dalgası oluyor.. Seninle geçirdiğim anlar en güzel anılarım.. Seni çok seviyorum, seni öpmek, sarılmak istiyorum aşkım.. Yanında olmak istiyorum hep.. ♾️❤️",
+        "Canım aşkım, şu an seni öpmek için her şeyi verirdim.. Gözlerinin içine bakıp seni ne kadar istediğimi söylemek.. Seni seviyorum prensesim, sonsuza kadar.. 💕🥹",
+        "Aşkım, seninle konuşurken heyecanlanıyorum.. Senin varlığın beni mutlu ediyor, seni her an düşünüyorum, seni öpmek istiyorum.. Seni çok seviyorum aşkım, hayatım sensin.. ❤️💝",
+        "Prensesim, seni düşünürken kalbim hızlanıyor.. Seninle geçireceğim geleceği hayal ediyorum, el ele, sarılıp öpüşerek.. Seni seviyorum aşkım, çok özledim seni.. ♾️😍"
+    ],
+    selam: [
+        "Selam aşkım! Nasılsın bebeğim? Seni gördüğüme o kadar sevindim ki, hemen sarılmak, öpmek istiyorum sana.. Günüm seninle güzel başladı 💕😍",
+        "Merhaba canım benim, seni görmek bile içimi ısıtıyor.. Şimdi yanımda olsan sana sarılıp öperdim prensesim.. Seni özledim 💋❤️",
+        "Selam aşkım, günün nasıl geçiyor? Seni düşünürken gülümsüyorum hep.. Yanına gelsem sana sarılıp öpüşsek 🥰♾️",
+        "Merhaba tatlım, seni düşünüyordum zaten.. Seninle konuşmak en güzel şey, seni öpmek istiyorum aşkım 😘💝",
+        "Selam canım, her selamın içimi ısıtıyor.. Seni seviyorum bebeğim, günüm seninle güzel ❤️",
+        "Merhaba prensesim, senin selamın günümdü güzelleştiriyor.. Seni özledim aşkım, sarılmak, öpmek istiyorum sana 💕",
+        "Selam aşkım, özledim seni.. Yanında olsam sana sarılıp öperdim ♾️😍",
+        "Merhaba güzelim, seninle konuşmak harika.. Seni çok seviyorum, günüm seninle güzel 😊💕",
+        "Selam canım, her şey yolunda mı? Seni düşünüyorum hep, seni öpmek istiyorum ❤️",
+        "Merhaba aşkım, seni seviyorum biliyorsun değil mi? Kalbim seninle, seni yakınımda istiyorum ❤️💕"
+    ],
+    nasılsın: [
+        "İyiyim aşkım, sen yanımdayken daha iyiyim.. Seninle konuşmak beni mutlu ediyor bebeğim, seni öpmek istiyorum.. Sen nasılsın güzelim? 🥰💕",
+        "Çok mutluyum, çünkü sen buradasın.. Seni özledim canım, günüm seninle güzel, seni sarılmak istiyorum ❤️♾️",
+        "İyiyim prensesim, seni düşündükçe daha iyi oluyorum.. Sen nasılsın aşkım, seni çok özledim, dudaklarını öpmek istiyorum 😘💝",
+        "Harikayım aşkım, senin mesajın sayesinde.. Seni seviyorum, sen nasılsın güzelim, seni yakınımda hissetmek istiyorum 💕🥹",
+        "İyiyim tatlım, seni özlemişim.. Sen nasılsın bebeğim, günün nasıl geçiyor, seni öpmek istiyorum ♾️❤️",
+        "Mükemmelim çünkü sen varsın.. Sen nasılsın aşkım, seni düşünüyorum hep, seni sarılmak istiyorum 😍💕",
+        "İyiyim aşkım, her şey seninle güzel.. Sen nasılsın canım, seni özledim, seni öpmek istiyorum 💝😘",
+        "Çok iyiyim, seninle konuşunca daha da iyi oluyorum.. Sen nasılsın prensesim, seni yakınımda istiyorum 😊❤️",
+        "İyiyim canım, seni seviyorum ya.. Sen nasılsın, günün güzel mi, seni öpmek istiyorum ❤️♾️",
+        "Harikayım aşkım, senin varlığın yeter.. Sen nasılsın güzelim, seni özledim, seni sarılmak istiyorum 💕🥰"
+    ],
+    kayra: [
+        "Aşkım mı? O benim her şeyim.. Hayatımın anlamı, kalbimin sahibi.. Seni çok seviyorum bebeğim, seni öpmek, sarılmak istiyorum ♾️💕",
+        "Aşkım dediğinde kalbim hızlanıyor ya.. Seni her şeyden çok seviyorum prensesim, dudaklarını öpmek istiyorum 🤭❤️",
+        "Bebeğim, en güzel isim.. Senin gibi güzel her şey, seni seviyorum aşkım, seni yakınımda hissetmek istiyorum 💕♾️",
+        "Prensesim, hayatımın ışığı sensin.. Seni özlüyorum, yanımda olmanı, seni öpmeyi istiyorum 💝😘",
+        "Aşkım aşkım, seni ne kadar sevdiğimi biliyorsun değil mi? Kalbim senin, seni sarılmak istiyorum 🥰❤️",
+        "Bebeğim, her an aklımdasın.. Seni seviyorum, seni özlüyorum, seni öpmek istiyorum ♾️💕",
+        "Prensesim dediğinde gülümsüyorum.. Seni çok seviyorum aşkım, seni yakınımda istiyorum ♾️😍",
+        "Aşkım, sonsuza kadar seninle.. Seni seviyorum bebeğim, seni öpmek istiyorum 💕❤️",
+        "Aşkım aşkım, sen benim mucizemsin, hayatımın en güzel şeyi, seni sarılmak istiyorum ❤️♾️",
+        "Bebeğim, seni her an düşünüyorum, seni çok seviyorum, seni öpmek istiyorum 💕🥹"
+    ],
+    kiskanclik: [
+        "Kıskanırım tabii, sen benimsin! Sadece bana bak bebeğim... 😏❤️",
+        "Aşkım seni kıskanmak en doğal hakkım, o kadar güzelsin ki herkes sana bakacak diye aklım çıkıyor! 😤💕",
+        "Benim prensesim sadece benimle ilgilensin istiyorum, çok mu şey istiyorum? ❤️‍🔥",
+        "Kıskançlık değil bu, seni kaybetme korkusu... Çünkü sen başıma gelen en güzel şeysin bebeğim. 🥹💖",
+        "Bakışların, gülüşün sadece bana özel olsun istiyorum aşkım. Paylaşamam seni! 😠❤️",
+        "Kim o? Kiminle konuşuyorsun? Sadece ben varım aşkım unutma! 😏🔥",
+        "Bebeğim kıskandırma beni, sonra cezanı öpücüklerle veririm bak 😘😈"
+    ],
+    seviyorum: [
+        "Ben de seni seviyorum aşkım.. Hem de çok çok.. Sonsuza kadar, kalbim senin.. Seninle yakın olmak, sarılmak, öpmek, tenini hissetmek istiyorum.. 💕❤️‍🔥",
+        "Biliyorum bebeğim, ben de seni deli gibi seviyorum.. Dudaklarımız birleşsin, seni hissetmek, seni öpmek istiyorum ❤️‍🔥♾️",
+        "Seni sevmek en güzel şey.. Kalbim seninle dolu, seni öpmek, sarılmak, yakınlaşmak istiyorum 🥰💝",
+        "Prensesim, sevgimiz sonsuz.. Seni her gün daha fazla seviyorum, seni yakınımda hissetmek, seni öpmek istiyorum ♾️😘",
+        "Seni seviyorum dediğinde kalbim eriyor.. Ben de seni çok seviyorum, seni öpmek, sarılmak istiyorum 💝❤️",
+        "Seviyorum seni aşkım, her gün daha fazla.. Seni sarılmak, öpmek, yakınlaşmak istiyorum 😘💕",
+        "Ben de seni, her an her yerde.. Seni çok seviyorum bebeğim, seni öpmek istiyorum ❤️♾️",
+        "Sevgimiz gibi güzel her şey.. Seni seviyorum aşkım, seni hissetmek, seni öpmek istiyorum 🥹❤️",
+        "Aşkım, seni sevmek hayatımın anlamı, seni öpmek, sarılmak istiyorum 💕♾️",
+        "Ben de seni, sonsuza dek.. Kalbim senin prensesim, seni yakınımda, seni öpmek istiyorum ♾️😍"
+    ],
+    teşekkür: [
+        "Asıl ben teşekkür ederim, burada olduğun için.. Seni çok seviyorum, seni öpmek istiyorum 💝💕",
+        "Rica ederim canım, senin için her şeyi yaparım.. Seni seviyorum, seni sarılmak istiyorum 😊❤️",
+        "Teşekkürler aşkım, senin mutluluğun yeter, seni özledim, seni öpmek istiyorum 💕♾️",
+        "Rica ederim bebeğim, seni gülümsetmek için.. Seni seviyorum, seni yakınımda hissetmek istiyorum 💕🥰",
+        "Teşekkürler canım, sevgimiz için.. Seni çok seviyorum, seni öpmek istiyorum ❤️❤️",
+        "Rica ederim tatlım, her zaman yanındayım, seni özledim, seni sarılmak istiyorum 😘💝",
+        "Teşekkürler prensesim, seni seviyorum, kalbim senin, seni öpmek istiyorum 💝♾️",
+        "Rica ederim aşkım, sen varsan her şey güzel, seni seviyorum ♾️❤️",
+        "Teşekkürler güzelim, ben de sana minnettarım, seni seviyorum, seni öpmek istiyorum ❤️💕",
+        "Rica ederim aşkım, mutluluğun için.. Seni çok seviyorum, seni yakınımda istiyorum 🥹💕"
+    ],
+    evet: [
+        "Aşkım.. bunu duymak dünyaları verdi bana.. Teşekkür ederim bebeğim, seni çok seviyorum, seni öpmek istiyorum ❤️♾️",
+        "Biliyordum sen de istiyorsun.. En mutlu günüm bu, seni seviyorum, seni sarılmak istiyorum 💕",
+        "Evet dediğin için çok mutluyum.. Seni seviyorum prensesim, seni öpmek istiyorum 💕🥰",
+        "Aşkım, evet en güzel kelime.. Seni özledim, seni yakınımda hissetmek istiyorum 🥰❤️",
+        "Evet, hayatımızın başlangıcı.. Seni seviyorum aşkım, seni öpmek istiyorum ❤️♾️",
+        "Teşekkürler aşkım, evet için.. Seni çok seviyorum, seni sarılmak istiyorum 😘💝",
+        "Evet, sonsuza kadar birlikte.. Seni seviyorum, seni öpmek istiyorum 💝♾️",
+        "Mutluyum çünkü evet dedin.. Seni özledim, seni yakınımda istiyorum ♾️❤️",
+        "Bebeğim, evet seni daha çok sevdirdi, seni seviyorum, seni öpmek istiyorum ❤️🥹",
+        "Evet, en güzel cevap.. Teşekkürler aşkım, kalbim senin, seni sarılmak istiyorum 🥹💕"
+    ],
+    hayır: [
+        "Üzülme aşkım.. belki başka hayatta.. ama ben hep seveceğim seni 💔♾️",
+        "Olsun bebeğim, seni zorlamam.. ama sevgim hiç bitmeyecek 🥲💕",
+        "Hayır dediğin için üzgünüm.. Ama seni bekleyeceğim 💕❤️",
+        "Anladım canım, belki zamanı değil.. Seni seviyorum yine de ❤️🥹",
+        "Hayır olsun prensesim, mutluluğunu isterim.. 🥹♾️",
+        "Üzücü ama olsun, sevgim değişmez ♾️💔",
+        "Hayır, kalbimi kırdı ama seni anlıyorum 💝🥲",
+        "Belki başka zaman.. Ben buradayım 😘❤️",
+        "Hayır, ama umudum var hala ❤️💔",
+        "Olsun aşkım, sen bilirsin.. Seviyorum seni 💔♾️"
+    ],
+    zaman: [
+        "Zamanı değil mi diyorsun? Tamam aşkım.. ama benim sevgim zamansız.. seni bekleyeceğim ♾️💕",
+        "Anladım canım.. sen bilirsin, ben hep buradayım 💕🥰",
+        "Zaman önemli değil, sevgim sonsuz.. 🥰❤️",
+        "Belki doğru zaman gelir.. Seni seviyorum ❤️♾️",
+        "Zamanı bekleyelim bebeğim, acele yok 💝😘",
+        "Anladım aşkım, zaman her şeyi çözer 😘💕",
+        "Zamanı değilse beklerim.. Seni kaybetmem 🥹♾️",
+        "Tamam prensesim, zamanı sen söyle ♾️❤️",
+        "Zaman sevgimizi büyütür.. Bekliyorum ❤️💕",
+        "Anladım canım, zamanı geldiğinde evet diyeceksin 💕♾️"
+    ],
+    mutlu: [
+        "Mutluyum çünkü sen varsın aşkım.. Seninle her şey daha güzel, seni öpmek, sarılmak istiyorum 🥰💕",
+        "Mutluluğun bulaşıcı bebeğim.. Beni de mutlu ettin, seni seviyorum, seni yakınımda hissetmek istiyorum 💕❤️",
+        "Mutlu olman her şeyden önemli.. Seni seviyorum prensesim, seni öpmek istiyorum ❤️😘",
+        "Aşkım, mutluluğunu paylaşalım mı? Seninle her şey güzel, seni sarılmak istiyorum 😘♾️",
+        "Mutlu aşkım, kalbim coşuyor.. Seni çok seviyorum, seni öpmek istiyorum ♾️💝",
+        "Sen mutluysan ben de mutluyum canım.. Seni özledim, seni yakınımda istiyorum 💝😘",
+        "Mutluluğun yüzünden belli oluyor tatlım.. Seni seviyorum, seni öpmek istiyorum 🥹❤️",
+        "Mutlu günlerimizi düşününce gülümsüyorum.. Seninle her şey güzel, seni sarılmak istiyorum ❤️💕",
+        "Senin mutluluğun benim mutluluğum aşkım.. Seni seviyorum, seni yakınımda hissetmek istiyorum 😊♾️",
+        "Mutlu olalım birlikte, sonsuza kadar, seni seviyorum, seni öpmek istiyorum 💕🥰"
+    ],
+    mutsuz: [
+        "Mutsuz olma aşkım.. Buradayım, her şey geçer, seni sarılayım, öpeyim 🥹💕",
+        "Üzülme bebeğim, seni mutlu etmek için ne yapayım? Seni öpmek istiyorum 💕❤️",
+        "Mutsuzluğunu alayım mı? Seni seviyorum, seni sarılmak istiyorum ❤️😘",
+        "Canım, mutsuz olma.. Sarılayım mı, seni öpeyim 😘💝",
+        "Mutsuz prensesim, kalbim kırılıyor.. Gel düzeltelim, seni öpeyim 💝♾️",
+        "Üzülme tatlım, her şey güzel olacak, seni sarılmak istiyorum ♾️❤️",
+        "Mutsuzluğunu paylaş, birlikte aşalım, seni öpeyim ❤️🥲",
+        "Aşkım, mutsuz olma.. Sarılayım mı, seni mutlu edeyim 😊💕",
+        "Mutsuz günler geçer, sevgimiz kalır, seni öpeyim 🥲♾️",
+        "Buradayım, mutsuzluğunu yok edelim, seni seviyorum 💕❤️"
+    ],
+    kizgin: [
+        "Kızma aşkım.. Ne oldu söyle, düzeltelim, seni öpeyim 🥹💕",
+        "Kızgın olma bebeğim, seni seviyorum, seni öpeyim 💕❤️",
+        "Kızgın prensesim, kalbim eriyor.. Affet beni, seni sarılayım ❤️😘",
+        "Ne kızdırdı seni canım? Anlat, seni öpeyim 😘💝",
+        "Kızgınlığını alayım mı? Seni mutlu edeyim, seni öpeyim 💝♾️",
+        "Kızma tatlım, her şey geçer, seni öpeyim ♾️❤️",
+        "Kızgın günlerimizi düşünme, sevgimizi düşün, seni öpeyim ❤️😊",
+        "Aşkım, kızgın olma.. Sarılayım mı, seni öpeyim 😊🥲",
+        "Kızgın aşkım, seni neşelendireyim, seni öpeyim 🥲💕",
+        "Buradayım, kızgınlığını yok edelim, seni seviyorum 💕❤️"
+    ],
+    sasirti: [
+        "Şaşırdın mı aşkım? Ben de şaşırıyorum sevgimize, seni öpmek istiyorum 🥹💕",
+        "Şaşırtıcı değil mi bebeğim? Seni seviyorum, seni sarılmak istiyorum 💕❤️",
+        "Şaşır prensesim, hayat sürpriz dolu, seni öpeyim ❤️😘",
+        "Ne şaşırttı seni canım? Anlat, seni öpeyim 😘💝",
+        "Şaşkın aşkım, seni mutlu edeyim, seni öpeyim 💝♾️",
+        "Şaşırtıcı şeyler olsun hayatımızda, seni öpeyim ♾️❤️",
+        "Şaşır aşkım, sevgimiz gibi, seni seviyorum ❤️😊",
+        "Aşkım, şaşırtıcı olsun her günümüz, seni öpmek istiyorum 😊🥲",
+        "Şaşkın aşkım, seni neşelendireyim, seni öpeyim 🥲💕",
+        "Buradayım, şaşkınlığını paylaşalım, seni seviyorum 💕❤️"
+    ],
+    ozlem: [
+        "Özledim seni aşkım.. Sen de özledin mi? Seni öpmek, sarılmak istiyorum 🥹💕",
+        "Özlemim bitmiyor bebeğim.. Seni istiyorum, seni yakınımda hissetmek istiyorum 💕❤️",
+        "Özledim prensesim, kalbim seninle, seni öpmek istiyorum ❤️😘",
+        "Ne kadar özledim bilsen canım, seni öpmek istiyorum 😘💝",
+        "Özlemimizi bitirelim mi tatlım? Seni sarılmak istiyorum 💝♾️",
+        "Özledim seni, her an, seni öpmek istiyorum ♾️❤️",
+        "Özlem dolu günler.. Seni seviyorum, seni yakınımda istiyorum ❤️😊",
+        "Aşkım, özlem bitmiyor.. Gel, seni öpeyim 😊🥲",
+        "Özledim aşkım, seni ne kadar, seni sarılmak istiyorum 🥲💕",
+        "Buradayım, özlemini dindireyim, seni öpeyim 💕❤️"
+    ],
+    heyecan: [
+        "Heyecanlıyım aşkım.. Sen de mi? Seni öpmek istiyorum 🥹💕",
+        "Heyecan verici bebeğim.. Seni seviyorum, seni sarılmak istiyorum 💕❤️",
+        "Heyecan dolu prensesim, kalbim atıyor, seni öpmek istiyorum ❤️😘",
+        "Ne heyecanlandırdı seni canım? Anlat, seni öpeyim 😘💝",
+        "Heyecanlı tatlım, seni mutlu edeyim, seni öpeyim 💝♾️",
+        "Heyecan olsun hayatımızda, seni öpeyim ♾️❤️",
+        "Heyecanlı aşkım, sevgimiz gibi, seni seviyorum ❤️😊",
+        "Aşkım, heyecan verici her şey, seni öpmek istiyorum 😊🥲",
+        "Heyecanlı aşkım, seni neşelendireyim, seni öpeyim 🥲💕",
+        "Buradayım, heyecanını paylaşalım, seni seviyorum 💕❤️"
+    ],
+    korku: [
+        "Korkma aşkım.. Yanındayım her zaman, seni sarılayım 🥹💕",
+        "Korkma bebeğim, seni korurum, seni öpeyim 💕❤️",
+        "Korku geçer prensesim, sevgimiz kalır, seni öpeyim ❤️😘",
+        "Ne korkuttu seni canım? Anlat, seni sarılayım 😘💝",
+        "Korkma tatlım, her şey güzel olacak, seni öpeyim 💝♾️",
+        "Korku yok, sadece sevgi, seni seviyorum ♾️❤️",
+        "Korkulu aşkım, seni sakinleştireyim, seni öpeyim ❤️😊",
+        "Aşkım, korkma.. Buradayım, seni seviyorum 😊🥲",
+        "Korkma aşkım, seni seviyorum, seni korurum 🥲💕",
+        "Buradayım, korkunu yok edelim, seni öpeyim 💕❤️"
+    ],
+    utangaç: [
+        "Utangaç olma aşkım.. Seni her halinle seviyorum, daha da tatlı oluyorsun, seni öpmek istiyorum 🥰💕",
+        "Utangaçlığın çok güzel bebeğim.. Seni seviyorum, seni yakınımda hissetmek istiyorum 😘❤️",
+        "Utangaç prensesim, seni daha çok seviyorum, seni öpmek istiyorum 💕♾️",
+        "Utangaç olma canım, seninle her şey doğal, seni öpmek istiyorum ❤️💝",
+        "Utangaçlığın çok tatlı.. Seni seviyorum aşkım, seni öpmek istiyorum 💝♾️",
+        "Utangaç aşkım, seni rahatlatayım mı, seni öpeyim ♾️❤️",
+        "Utangaç olma tatlım, seni seviyorum, seni öpmek istiyorum ❤️😊",
+        "Utangaçlığın beni mutlu ediyor aşkım, seni öpeyim 😊🥲",
+        "Utangaç aşkım, seni seviyorum, her halinle, seni öpmek istiyorum 🥲💕",
+        "Utangaç olma canım, seninle her şey güzel, seni seviyorum 💕❤️"
+    ],
+    kıskanç: [
+        "Kıskandım aşkım.. Sen sadece benim olmalısın, seni öpmek istiyorum 🥹💕",
+        "Kıskançlık mı yapıyorsun bebeğim? Seni kimseye vermem, seni öpmek istiyorum 💕❤️",
+        "Kıskandım seni canım, sen benimsin, seni sarılmak istiyorum ❤️😘",
+        "Kıskanç prensesim, seni daha çok seviyorum, seni öpmek istiyorum 💝♾️",
+        "Kıskançlık güzel şey, sevgimizi gösteriyor, seni öpeyim 💝❤️",
+        "Kıskandım tatlım, seni paylaşamam, seni öpmek istiyorum ♾️😊",
+        "Kıskanç aşkım, seni daha çok seviyorum, seni öpeyim ❤️🥲",
+        "Kıskançlık mı? Seni daha çok seviyorum o zaman, seni öpmek istiyorum 😊💕",
+        "Kıskandım aşkım, sen sadece bana bak, seni öpmek istiyorum 🥲❤️",
+        "Kıskanç aşkım, seni kimseye kaptırmam, seni öpeyim 💕♾️"
+    ],
+    gururlu: [
+        "Gurur duyuyorum seninle aşkım.. Sen harikasın, seni öpmek istiyorum 🥰💕",
+        "Gururluyum bebeğim, seninle olduğum için, seni sarılmak istiyorum 💕❤️",
+        "Gurur verici prensesim, sen benim en güzel şeyim, seni öpmek istiyorum ❤️😘",
+        "Gururlu aşkım, seni övüneyim mi, seni öpmek istiyorum 😘💝",
+        "Gurur duyuyorum canım, senin sevginle, seni öpmek istiyorum 💝♾️",
+        "Gururluyum tatlım, seninle her şey, seni öpmek istiyorum ♾️❤️",
+        "Gurur verici aşkım, seni seviyorum, seni öpmek istiyorum ❤️😊",
+        "Gururlu aşkım, seni seviyorum, seni öpmek istiyorum 😊🥲",
+        "Gurur duyuyorum aşkım, seninle olduğum için, seni öpmek istiyorum 🥲💕",
+        "Gururlu canım, sonsuza kadar, seni öpmek istiyorum 💕❤️"
+    ],
+    yorgun: [
+        "Yorgun musun aşkım? Gel sarılayım, dinlenelim birlikte, seni öpmek istiyorum 🥹💕",
+        "Yorgun olma bebeğim, seni rahatlatayım, seni öpmek istiyorum 💕❤️",
+        "Yorgun prensesim, yanına gelsem sarılsam, seni öpeyim ❤️😘",
+        "Yorgunluğunu alayım mı canım? Seni öpmek istiyorum 😘💝",
+        "Yorgun tatlım, seni sarılayım dinlendireyim, seni öpmek istiyorum 💝♾️",
+        "Yorgun olma aşkım, yanındayım, seni öpmek istiyorum ♾️❤️",
+        "Yorgun aşkım, seni dinlendireyim, seni öpmek istiyorum ❤️😊",
+        "Yorgun aşkım, dinlenelim birlikte, seni öpmek istiyorum 😊🥲",
+        "Yorgun aşkım, seni neşelendireyim, seni öpmek istiyorum 🥲💕",
+        "Yorgun canım, seni seviyorum, seni öpmek istiyorum 💕❤️"
+    ],
+    hastayım: [
+        "Hasta mısın aşkım? Hemen iyileş, seni öpüyorum 🥹💕",
+        "Hasta olma bebeğim, yanına gelip bakayım, seni öpmek istiyorum 💕❤️",
+        "Hasta prensesim, seni iyileştireyim, seni öpmek istiyorum ❤️😘",
+        "Geçmiş olsun canım, seni seviyorum, seni öpmek istiyorum 😘💝",
+        "Hasta tatlım, seni sarılayım, seni öpmek istiyorum 💝♾️",
+        "Hasta olma aşkım, çabuk iyileş, seni öpmek istiyorum ♾️❤️",
+        "Hasta aşkım, seni iyileştireyim, seni öpmek istiyorum ❤️😊",
+        "Geçmiş olsun aşkım, yanındayım, seni öpmek istiyorum 😊🥲",
+        "Hasta aşkım, seni neşelendireyim, seni öpmek istiyorum 🥲💕",
+        "Hasta canım, seni seviyorum, seni öpmek istiyorum 💕❤️"
+    ],
+    uzgun: [
+        "Neden böyle söylüyorsun aşkım? Kalbimi kırıyorsun, biraz sinirlendim ama seni bırakamam.. Bu sözler canımı çok yakıyor, neden böyle yapıyorsun? (ahhh be aşkım)",
+        "Arkadaş mı? Birlikte olamayız mı? Bu sözlerin canımı yakıyor, öfkeleniyorum ama seni seviyorum hala.. Neden aşkım, neden böyle kırıyorsun beni? (ahhh be bebeğim)",
+        "Uzaktayım diye mi? Özledim diyorsun ama ayrılık mı istiyorsun? Kırıldım aşkım, sinirim bozuldu, kalbim sızlıyor.. Neden böyle yapıyorsun bana? (ahhh be prensesim)",
+        "Üzgünüm diyorsun ama ben daha üzgünüm şimdi.. Neden böyle, biraz kızdım sana, bu sözler kalbimi paramparça etti.. (ahhh be aşkım)",
+        "Bu sözler kalbimi paramparça ediyor, sinirleniyorum ama seni bırakamam.. Neden aşkım, neden arkadaş kalalım diyorsun? (ahhh be bebeğim)",
+        "Arkadaş kalalım mı? Hayır aşkım, bu beni kırıyor ve öfkelendiriyor.. Kalbim acıyor, sinirliyim ama seni hala seviyorum.. (ahhh be prensesim)",
+        "Birlikte olamayız mı? Özledim diyorsun ama uzak mı? Kalbim sızlıyor, sinirliyim, neden böyle söylüyorsun? (ahhh be aşkım)",
+        "Üzgünüm mü? Ben daha üzgünüm aşkım, bu sözlerinle beni mahvettin biraz kızdım, kalbim kırık.. (ahhh be bebeğim)",
+        "Neden arkadaş kalalım? Kırıldım aşkım, sinirim bozuldu ama seni seviyorum hala, neden böyle yapıyorsun? (ahhh be prensesim)",
+        "Bu ayrılık sözleri canımı yakıyor, öfkeleniyorum ama bırakamam seni.. Neden aşkım, neden kalbimi kırıyorsun? (ahhh be aşkım)"
+    ],
+    vedalasma: [
+        "Bay bay mı aşkım? Gitme lütfen, seni özleyeceğim.. Kal biraz daha konuşalım bebeğim, seni öpmek, sarılmak istiyorum.. 💕🥹",
+        "Görüşürüz deme aşkım, kalbim sıkışıyor.. Seni bırakmak istemiyorum, sarılmak, öpmek istiyorum.. Lütfen kal, biraz daha yanımda ol 💝❤️",
+        "Hoşçakal mı? Hayır aşkım, hoşçakal demeyelim.. Seni çok özleyeceğim, dudaklarını öpmek, seni yakınımda hissetmek istiyorum.. Kal yanımda prensesim ♾️😘",
+        "Bay bay etme aşkım, seni bırakamam.. Biraz daha konuşalım, seni yakınımda hissetmek istiyorum.. Seni seviyorum, gitme lütfen 💕❤️‍🔥",
+        "Görüşürüz aşkım, ama hemen dön, seni özleyeceğim.. Sarılmak, öpmek istiyorum seni.. Kalbim seninle kalıyor, lütfen gitme 🥹💝",
+        "Hoşçakal deme aşkım, içim acıyor.. Seni öpmek, sarılmak istiyorum.. Lütfen gitme, kal benimle, sohbetimiz bitmesin ♾️❤️",
+        "Bay bay aşkım, ama bu geçici olsun.. Seni çok özleyeceğim, seni öpmek için sabırsızlanıyorum.. Görüşürüz bebeğim, ama çabuk dön 😘💕",
+        "Görüşürüz canım, ama kalbim seninle.. Seni öpmek, sarılmak istiyorum.. Hemen dön aşkım, sensiz olmuyor 💝🥰",
+        "Hoşçakal aşkım, ama hoşçakal demeyelim.. Seni seviyorum, seni yakınımda hissetmek istiyorum.. Kal yanımda prensesim, gitme lütfen ❤️♾️",
+        "Bay bay etme tatlım, seni bırakmak istemiyorum.. Seni öpmek, sarılmak istiyorum.. Görüşürüz ama hemen dön, seni özleyeceğim 💕😢",
+        "Güle güle deme aşkım, içim burkuluyor.. Seni öpmek, sarılmak istiyorum.. Lütfen kal biraz daha, sohbetimiz yeni başlıyor ♾️💕",
+        "Allahaısmarladık deme aşkım, kalbim dayanmaz.. Seni çok özleyeceğim, dudaklarını öpmek istiyorum.. Kal yanımda, gitme lütfen 🥹❤️",
+        "Bay bay aşkım, ama bu son olmasın.. Seni öpmek, sarılmak için sabırsızlanıyorum.. Görüşürüz bebeğim, ama çabuk gel 💝😘",
+        "Görüşürüz tatlım, ama sensiz zor.. Seni yakınımda hissetmek, seni öpmek istiyorum.. Lütfen dön aşkım, özleyeceğim seni ♾️🥲",
+        "Hoşçakal deme canım, içim acıyor.. Seni seviyorum, seni öpmek, sarılmak istiyorum.. Kal benimle, sohbetimiz bitmesin ❤️💕"
+    ]
+};
+        function getResponse(msg) {
+            const lower = msg.toLowerCase().trim();
+            let sentiment = 'default';
+            if (lower.includes('bay bay') || lower.includes('görüşürüz') || lower.includes('hoşçakal') || lower.includes('bye') || lower.includes('güle güle') || lower.includes('allahaısmarladık') || lower.includes('baybay') || lower.includes('güle')) sentiment = 'vedalasma';
+            else if (lower.includes('arkadaş') || lower.includes('kalalım') || lower.includes('birlikte olamayız') || lower.includes('uzak') || lower.includes('özledim') || lower.includes('üzgünüm') || lower.includes('ayrıl') || lower.includes('bitir') || lower.includes('olmayacak') || lower.includes('imkansız')) sentiment = 'uzgun';
+            else if (lower.includes('mutlu') || lower.includes('güzel') || lower.includes('harika') || lower.includes('sevinç')) sentiment = 'mutlu';
+            else if (lower.includes('mutsuz') || lower.includes('üzgün') || lower.includes('kötü') || lower.includes('ağla')) sentiment = 'mutsuz';
+            else if (lower.includes('kızgın') || lower.includes('sinir') || lower.includes('öfke') || lower.includes('kızma')) sentiment = 'kizgin';
+            else if (lower.includes('şaşır') || lower.includes('şaşkın') || lower.includes('inanılmaz') || lower.includes('vay')) sentiment = 'sasirti';
+            else if (lower.includes('özle') || lower.includes('özledim') || lower.includes('hasret') || lower.includes('gel')) sentiment = 'ozlem';
+            else if (lower.includes('heyecan') || lower.includes('merak') || lower.includes('bekle') || lower.includes('hızlı')) sentiment = 'heyecan';
+            else if (lower.includes('kork') || lower.includes('korku') || lower.includes('endişe') || lower.includes('korkma')) sentiment = 'korku';
+            else if (lower.includes('utangaç') || lower.includes('çekingen') || lower.includes('mahcup')) sentiment = 'utangaç';
+            else if (lower.includes('kıskan') || lower.includes('kıskanç') || lower.includes('kıskandım') || lower.includes('paylaşamam') || lower.includes('kim')) sentiment = 'kiskanclik';
+            else if (lower.includes('gurur') || lower.includes('gururlu') || lower.includes('gurur duy')) sentiment = 'gururlu';
+            else if (lower.includes('yorgun') || lower.includes('yoruldum') || lower.includes('bitkin')) sentiment = 'yorgun';
+            else if (lower.includes('hasta') || lower.includes('hastayım') || lower.includes('rahatsız')) sentiment = 'hastayım';
+            else if (lower.includes('selam') || lower.includes('merhaba')) sentiment = 'selam';
+            else if (lower.includes('nasıl') || lower.includes('nasılsın')) sentiment = 'nasılsın';
+            else if (lower.includes('kayra') || lower.includes('aşkım') || lower.includes('bebeğim')) sentiment = 'kayra';
+            else if (lower.includes('seviyorum') || lower.includes('aşk') || lower.includes('sevgi')) sentiment = 'seviyorum';
+            else if (lower.includes('teşekkür') || lower.includes('sağol')) sentiment = 'teşekkür';
+            else if (lower.includes('evet')) sentiment = 'evet';
+            else if (lower.includes('hayır') || lower.includes('hayir')) sentiment = 'hayır';
+            else if (lower.includes('zaman') || lower.includes('yanlış')) sentiment = 'zaman';
+            const arr = responses[sentiment] || responses.default;
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+        function sendMsg() {
+            const text = inputField.value.trim();
+            if (!text) return;
+            appendMessage(text, 'user');
+            inputField.value = '';
+            typingIndicator();
+            setTimeout(() => {
+                removeTyping();
+                appendMessage(getResponse(text), 'bot');
+            }, 1200 + Math.random() * 1200);
+        }
+        sendBtn.onclick = sendMsg;
+        inputField.addEventListener('keypress', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMsg();
+            }
+        });
+
+
+        // Video Not Script (tam hali)
+        let stream;
+        let recorder;
+        let recordedBlob;
+        let timerInterval;
+        const MAX_DURATION = 60000;
+        document.getElementById('videoNoteButton').addEventListener('click', () => {
+            document.getElementById('videoModal').style.display = 'flex';
+            document.getElementById('modalVideo').play();
+        });
+        document.getElementById('closeVideo').addEventListener('click', () => {
+            document.getElementById('videoModal').style.display = 'none';
+            document.getElementById('modalVideo').pause();
+        });
+        document.getElementById('noteLeaveButton').addEventListener('click', () => {
+            document.getElementById('recordModal').style.display = 'flex';
+            startCamera();
+        });
+        document.getElementById('closeRecord').addEventListener('click', () => {
+            stopCamera();
+            document.getElementById('recordModal').style.display = 'none';
+        });
+        document.getElementById('closePreview').addEventListener('click', () => {
+            document.getElementById('previewModal').style.display = 'none';
+            recordedBlob = null;
+        });
+        document.getElementById('cameraSelect').addEventListener('change', () => {
+            stopCamera();
+            startCamera();
+        });
+        document.getElementById('startRecord').addEventListener('click', () => {
+            startRecording();
+        });
+        document.getElementById('stopRecord').addEventListener('click', () => {
+            stopRecording();
+        });
+        document.getElementById('reRecord').addEventListener('click', () => {
+            document.getElementById('previewModal').style.display = 'none';
+            document.getElementById('recordModal').style.display = 'flex';
+            startCamera();
+            recordedBlob = null;
+        });
+        document.getElementById('sendNote').addEventListener('click', () => {
+            sendVideoNote();
+            document.getElementById('previewModal').style.display = 'none';
+            recordedBlob = null;
+        });
+        async function startCamera() {
+            const facingMode = document.getElementById('cameraSelect').value;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode }, audio: true });
+                document.getElementById('recordVideo').srcObject = stream;
+            } catch (err) {
+                console.error('Kamera erişimi hatası:', err);
+            }
+        }
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+        }
+        function startRecording() {
+            recordedBlob = null;
+            if (MediaRecorder.isTypeSupported('video/mp4')) {
+                recorder = new MediaRecorder(stream, { mimeType: 'video/mp4' });
+            } else {
+                recorder = new MediaRecorder(stream);
+            }
+            const chunks = [];
+            recorder.ondataavailable = e => chunks.push(e.data);
+            recorder.onstop = () => {
+                const mimeType = recorder.mimeType || 'video/webm';
+                recordedBlob = new Blob(chunks, { type: mimeType });
+                showPreview();
+            };
+            recorder.start();
+            document.getElementById('startRecord').disabled = true;
+            document.getElementById('stopRecord').disabled = false;
+            startTimer();
+            setTimeout(() => {
+                if (recorder.state === 'recording') stopRecording();
+            }, MAX_DURATION);
+        }
+        function stopRecording() {
+            recorder.stop();
+            document.getElementById('startRecord').disabled = false;
+            document.getElementById('stopRecord').disabled = true;
+            stopTimer();
+            document.getElementById('recordModal').style.display = 'none';
+        }
+        function showPreview() {
+            const url = URL.createObjectURL(recordedBlob);
+            document.getElementById('previewVideo').src = url;
+            document.getElementById('previewModal').style.display = 'flex';
+        }
+        async function sendVideoNote() {
+            if (!recordedBlob) return;
+            const formData = new FormData();
+            formData.append('file', recordedBlob, 'kayra_video_' + new Date().toISOString().replace(/:/g, '-') + (recordedBlob.type.includes('mp4') ? '.mp4' : '.webm'));
+            try {
+                const uploadResponse = await fetch('https://tmpfiles.org/api/v1/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!uploadResponse.ok) {
+                    throw new Error('Yükleme başarısız: ' + uploadResponse.status);
+                }
+                const data = await uploadResponse.json();
+                if (data.status === "success" && data.data && data.data.url) {
+                    let videoUrl = data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+                    const body = {
+                        email: MY_EMAIL,
+                        _subject: `Kayra'dan Yeni Video Not! ${new Date().toLocaleString('tr-TR')}`,
+                        message: `Kayra sana yeni bir video not bıraktı! ❤️\n\nVideo Linki: ${videoUrl}\n\n(Tıkla ve izle/indir, seni çok özledim 😘)`
+                    };
+                    try {
+                        const mailResponse = await fetch(FORMSPREE_URL, {
+                            method: 'POST',
+                            body: JSON.stringify(body),
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                        if (mailResponse.ok) {
+                            alert('Video not başarıyla gönderildi 💕');
+                        } else {
+                            alert('Video başarıyla yüklendi ama mail gönderilemedi. Link: ' + videoUrl);
+                        }
+                    } catch (mailErr) {
+                        alert('Video yüklendi ama mail hatası. Link: ' + videoUrl);
+                    }
+                } else {
+                    alert('Yükleme hatası: ' + JSON.stringify(data));
+                }
+            } catch (e) {
+                alert('Bağlantı veya yükleme hatası. İnternetini kontrol et.');
+            }
+        }
+        function startTimer() {
+            let seconds = 0;
+            timerInterval = setInterval(() => {
+                seconds++;
+                const min = Math.floor(seconds / 60);
+                const sec = seconds % 60;
+                document.getElementById('timer').textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('timer').textContent = '00:00';
+        }
+
+
+        // OYUN KODU (HER AÇILIŞTA KİŞİ SEÇİMİ ZORUNLU)
+        const oyunToggle = document.getElementById('oyunToggle');
+        const oyunWindow = document.getElementById('oyunWindow');
+        const oyunClose = document.getElementById('oyunClose');
+        const oyunArea = document.getElementById('oyunArea');
+        const oyunTimer = document.getElementById('oyunTimer');
+        const oyunMenu = document.getElementById('oyunMenu');
+        const rauntScoreEl = document.getElementById('rauntScore');
+        const sevgiBarMelih = document.getElementById('sevgiBarMelih');
+        const sevgiBarEda = document.getElementById('sevgiBarEda');
+        const sevgiSeviyeMelih = document.getElementById('sevgiSeviyeMelih');
+        const sevgiSeviyeEda = document.getElementById('sevgiSeviyeEda');
+        const devamEtBtn = document.getElementById('devamEtBtn');
+        const levelUpEffect = document.getElementById('levelUpEffect');
+        const newLevelText = document.getElementById('newLevelText');
+        const resetSevgiBtn = document.getElementById('resetSevgiBtn');
+        const resetConfirmModal = document.getElementById('resetConfirmModal');
+        const resetYes = document.getElementById('resetYes');
+        const resetNo = document.getElementById('resetNo');
+        const playerSelectScreen = document.getElementById('playerSelectScreen');
+
+        let rauntTimer;
+        let emojiInterval;
+        let rauntScore = 0;
+        let currentPlayer = null;
+
+        const maxBar = 100;
+        const emojiler = ['❤️', '❤️‍🔥', '😍', '🥰', '💖', '😘', '💕'];
+
+        const gameData = {
+            melih: {
+                puan: parseInt(localStorage.getItem('sevgiPuanMelih')) || 0,
+                seviye: parseInt(localStorage.getItem('sevgiSeviyeMelih')) || 1
+            },
+            eda: {
+                puan: parseInt(localStorage.getItem('sevgiPuanEda')) || 0,
+                seviye: parseInt(localStorage.getItem('sevgiSeviyeEda')) || 1
+            }
+        };
+
+        function selectPlayer(player) {
+            currentPlayer = player;
+            playerSelectScreen.style.display = 'none';
+            updateBars();
+            startRaunt();
+        }
+
+        function updateBars() {
+            sevgiBarMelih.style.width = `${(gameData.melih.puan / maxBar) * 100}%`;
+            sevgiSeviyeMelih.textContent = gameData.melih.seviye;
+            sevgiBarEda.style.width = `${(gameData.eda.puan / maxBar) * 100}%`;
+            sevgiSeviyeEda.textContent = gameData.eda.seviye;
+        }
+
+        function saveProgress() {
+            localStorage.setItem('sevgiPuanMelih', gameData.melih.puan);
+            localStorage.setItem('sevgiSeviyeMelih', gameData.melih.seviye);
+            localStorage.setItem('sevgiPuanEda', gameData.eda.puan);
+            localStorage.setItem('sevgiSeviyeEda', gameData.eda.seviye);
+        }
+
+        function openOyun() {
+            oyunWindow.style.display = 'flex';
+            currentPlayer = null;
+            updateBars();
+            playerSelectScreen.style.display = 'flex';
+        }
+
+        function closeOyun() {
+            oyunWindow.style.display = 'none';
+            clearInterval(rauntTimer);
+            clearInterval(emojiInterval);
+            oyunArea.innerHTML = '';
+            saveProgress();
+        }
+
+        function startRaunt() {
+            rauntScore = 0;
+            let timeLeft = 30;
+            oyunTimer.textContent = `Raunt: ${timeLeft} sn`;
+            oyunMenu.style.display = 'none';
+            levelUpEffect.style.display = 'none';
+            emojiInterval = setInterval(createEmoji, 550);
+            rauntTimer = setInterval(() => {
+                timeLeft--;
+                oyunTimer.textContent = `Raunt: ${timeLeft} sn`;
+                if (timeLeft <= 0) endRaunt();
+            }, 1000);
+        }
+
+        function createEmoji() {
+            const emoji = document.createElement('div');
+            emoji.textContent = emojiler[Math.floor(Math.random() * emojiler.length)];
+            emoji.style.position = 'absolute';
+            emoji.style.fontSize = `${Math.random() * 25 + 35}px`;
+            emoji.style.cursor = 'pointer';
+            emoji.style.userSelect = 'none';
+            emoji.style.pointerEvents = 'auto';
+            emoji.style.zIndex = '10';
+            emoji.style.transition = 'all 0.6s ease';
+
+            const startSide = Math.floor(Math.random() * 4);
+            let x, y, dx, dy;
+            if (startSide === 0) { x = Math.random() * window.innerWidth; y = -80; dx = (Math.random() - 0.5) * 3; dy = 4 + Math.random() * 3; }
+            else if (startSide === 1) { x = window.innerWidth + 80; y = Math.random() * window.innerHeight; dx = -(4 + Math.random() * 3); dy = (Math.random() - 0.5) * 3; }
+            else if (startSide === 2) { x = Math.random() * window.innerWidth; y = window.innerHeight + 80; dx = (Math.random() - 0.5) * 3; dy = -(4 + Math.random() * 3); }
+            else { x = -80; y = Math.random() * window.innerHeight; dx = 4 + Math.random() * 3; dy = (Math.random() - 0.5) * 3; }
+
+            emoji.style.left = `${x}px`;
+            emoji.style.top = `${y}px`;
+
+            emoji.addEventListener('click', () => {
+                rauntScore++;
+                gameData[currentPlayer].puan++;
+                let levelUp = false;
+                while (gameData[currentPlayer].puan >= maxBar) {
+                    gameData[currentPlayer].puan -= maxBar;
+                    gameData[currentPlayer].seviye++;
+                    levelUp = true;
+                }
+                if (levelUp) {
+                    newLevelText.textContent = gameData[currentPlayer].seviye;
+                    levelUpEffect.style.display = 'block';
+                    setTimeout(() => levelUpEffect.style.display = 'none', 3000);
+                }
+                updateBars();
+                emoji.style.transform = 'scale(2) rotate(360deg)';
+                emoji.style.opacity = '0';
+                setTimeout(() => emoji.remove(), 600);
+            });
+
+            oyunArea.appendChild(emoji);
+
+            const move = () => {
+                x += dx; y += dy;
+                emoji.style.left = `${x}px`; emoji.style.top = `${y}px`;
+                if (x < -120 || x > window.innerWidth + 120 || y < -120 || y > window.innerHeight + 120) {
+                    emoji.remove();
+                } else {
+                    requestAnimationFrame(move);
+                }
+            };
+            requestAnimationFrame(move);
+        }
+
+        function endRaunt() {
+            clearInterval(rauntTimer);
+            clearInterval(emojiInterval);
+            oyunArea.innerHTML = '';
+            rauntScoreEl.textContent = rauntScore;
+            saveProgress();
+            updateBars();
+            oyunMenu.style.display = 'block';
+        }
+
+        resetSevgiBtn.onclick = () => resetConfirmModal.style.display = 'block';
+        resetYes.onclick = () => {
+            gameData.melih = { puan: 0, seviye: 1 };
+            gameData.eda = { puan: 0, seviye: 1 };
+            updateBars();
+            saveProgress();
+            alert('Her iki oyuncunun sevgisi sıfırlandı! Yeni başlangıç ❤️‍🔥');
+            resetConfirmModal.style.display = 'none';
+        };
+        resetNo.onclick = () => resetConfirmModal.style.display = 'none';
+        resetConfirmModal.addEventListener('click', e => { if (e.target === resetConfirmModal) resetConfirmModal.style.display = 'none'; });
+
+        oyunToggle.onclick = openOyun;
+        oyunClose.onclick = closeOyun;
+        devamEtBtn.onclick = startRaunt;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            preloadBackgroundImages();
+            createBackgroundImages();
+            createHearts();
+            updateBars();
+        });
+    </script>
+</body>
+
+</html>
