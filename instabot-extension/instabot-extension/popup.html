@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>INSTABOT</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05050e;--s1:#09091a;--s2:#0e0e24;--s3:#14142e;
+  --b1:#1a1a38;--b2:#252550;
+  --g:#00ff88;--r:#ff2d55;--y:#ffcc00;--b:#0af;
+  --t:#e0e0ff;--m:#6666aa;
+}
+body{width:360px;min-height:480px;background:var(--bg);color:var(--t);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);pointer-events:none;z-index:999}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--b1);background:var(--s1)}
+.hdr-left{display:flex;align-items:center;gap:8px}
+.hicon{width:32px;height:32px;background:linear-gradient(135deg,var(--g),var(--b));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 15px rgba(0,255,136,0.2)}
+.htitle{font-family:'JetBrains Mono',monospace;font-size:0.9rem;font-weight:700;letter-spacing:3px;background:linear-gradient(90deg,var(--g),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hsub{font-family:'JetBrains Mono',monospace;font-size:0.45rem;color:var(--m);letter-spacing:2px}
+.pdot{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 6px var(--g);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.statusbar{background:var(--s2);border-bottom:1px solid var(--b1);padding:7px 14px;display:flex;align-items:center;justify-content:space-between}
+.stxt{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--m)}
+.stxt span{color:var(--g)}
+.content{padding:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
+.scard{background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:9px 8px;text-align:center}
+.sval{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700}
+.slbl{font-family:'JetBrains Mono',monospace;font-size:0.45rem;color:var(--m);letter-spacing:1px;margin-top:2px}
+.vg{color:var(--g)}.vr{color:var(--r)}.vb{color:var(--b)}.vy{color:var(--y)}
+.prog-wrap{background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:10px 12px;margin-bottom:12px}
+.prog-hdr{display:flex;justify-content:space-between;margin-bottom:6px}
+.prog-label{font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--m);letter-spacing:1px}
+.prog-pct{font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--g)}
+.pbar-wrap{background:var(--s3);border-radius:100px;height:4px;overflow:hidden}
+.pbar{height:100%;background:linear-gradient(90deg,var(--g),var(--b));border-radius:100px;width:0%;transition:width 0.4s}
+.prog-step{font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--m);margin-top:5px;min-height:14px}
+.btn{width:100%;padding:10px;border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;letter-spacing:2px;cursor:pointer;border:none;transition:all 0.15s;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-g{background:rgba(0,255,136,0.1);color:var(--g);border:1px solid rgba(0,255,136,0.25)}
+.btn-g:hover{background:rgba(0,255,136,0.18)}
+.btn-g:disabled{opacity:0.3;cursor:not-allowed}
+.btn-r{background:rgba(255,45,85,0.1);color:var(--r);border:1px solid rgba(255,45,85,0.25)}
+.btn-r:hover{background:rgba(255,45,85,0.18)}
+.btn-r:disabled{opacity:0.3;cursor:not-allowed}
+.btn-m{background:var(--s2);color:var(--m);border:1px solid var(--b1)}
+.btn-m:hover{color:var(--t);border-color:var(--b2)}
+.nflist{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;scrollbar-width:thin;scrollbar-color:var(--b1) transparent}
+.ucard{background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:6px 9px;display:flex;align-items:center;gap:8px;animation:si 0.2s ease}
+@keyframes si{from{opacity:0;transform:translateX(5px)}to{opacity:1;transform:none}}
+.uav{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--b2);flex-shrink:0;background:var(--s3)}
+.uav-fb{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.65rem;color:#fff;flex-shrink:0;border:1px solid var(--b2)}
+.a0{background:linear-gradient(135deg,#f43f5e,#ec4899)}.a1{background:linear-gradient(135deg,#8b5cf6,#6366f1)}
+.a2{background:linear-gradient(135deg,#06b6d4,#3b82f6)}.a3{background:linear-gradient(135deg,#10b981,#06b6d4)}
+.a4{background:linear-gradient(135deg,#f59e0b,#ef4444)}.a5{background:linear-gradient(135deg,#a855f7,#ec4899)}
+.a6{background:linear-gradient(135deg,#22c55e,#16a34a)}.a7{background:linear-gradient(135deg,#0ea5e9,#6366f1)}
+.uname{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--t)}
+.ufn{font-size:0.58rem;color:var(--m)}
+.utag{font-family:'JetBrains Mono',monospace;font-size:0.42rem;padding:1px 4px;border-radius:100px;background:rgba(255,204,0,0.1);color:var(--y);border:1px solid rgba(255,204,0,0.2);margin-left:auto;flex-shrink:0}
+.alert{background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--m);text-align:center;line-height:1.6}
+.alert.wrn{border-color:rgba(255,204,0,0.2);color:var(--y)}
+.divider{height:1px;background:var(--b1);margin:10px 0}
+.search{background:var(--bg);border:1px solid var(--b1);border-radius:6px;padding:5px 9px;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--t);outline:none;width:100%;margin-bottom:7px;transition:border-color 0.15s}
+.search:focus{border-color:var(--g)}.search::placeholder{color:var(--m)}
+.lastinfo{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--m);text-align:center;margin-top:4px}
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b1);border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hicon">📡</div>
+    <div>
+      <div class="htitle">INSTABOT</div>
+      <div class="hsub">TAKİP ETMEYENLERİ BUL</div>
+    </div>
+  </div>
+  <div class="pdot"></div>
+</div>
+
+<div class="statusbar">
+  <div class="stxt">Durum: <span id="ig-status">—</span></div>
+  <div class="stxt" id="last-time">—</div>
+</div>
+
+<div class="content">
+
+  <div id="view-notig" style="display:none">
+    <div class="alert wrn">⚠️ instagram.com'a git ve kendi profilini aç.</div>
+  </div>
+
+  <div id="view-ready" style="display:none">
+    <div class="stats">
+      <div class="scard"><div class="sval vb" id="st-fo">—</div><div class="slbl">FOLLOWİNG</div></div>
+      <div class="scard"><div class="sval vr" id="st-nf">—</div><div class="slbl">TAKİP ETM.</div></div>
+      <div class="scard"><div class="sval vy" id="st-done">—</div><div class="slbl">UNFOLLOW</div></div>
+    </div>
+
+    <div class="prog-wrap" id="prog-wrap" style="display:none">
+      <div class="prog-hdr">
+        <span class="prog-label" id="prog-label">ANALİZ EDİLİYOR</span>
+        <span class="prog-pct" id="prog-pct">0%</span>
+      </div>
+      <div class="pbar-wrap"><div class="pbar" id="pbar"></div></div>
+      <div class="prog-step" id="prog-step"></div>
+    </div>
+
+    <button class="btn btn-g" id="btn-analiz">🔍 ANALİZİ BAŞLAT</button>
+    <button class="btn btn-r" id="btn-unfollow" style="display:none">❌ UNFOLLOW TURU (50)</button>
+    <button class="btn btn-m" id="btn-dashboard" style="display:none">📊 DASHBOARD'DA GÖSTER</button>
+
+    <div id="nf-section" style="display:none">
+      <div class="divider"></div>
+      <input class="search" id="search" placeholder="🔍 ara..." />
+      <div class="nflist" id="nflist"></div>
+      <div class="lastinfo" id="lastinfo"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

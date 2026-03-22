@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INSTABOT — Otomasyon Paneli V6</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05050e;--s1:#09091a;--s2:#0e0e24;--s3:#14142e;
+  --b1:#1a1a38;--b2:#252550;
+  --g:#00ff88;--r:#ff2d55;--y:#ffcc00;--b:#0af;--p:#a855f7;
+  --t:#e0e0ff;--m:#6666aa;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--t);font-family:'Rajdhani',sans-serif;display:flex;flex-direction:column}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:9999}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:10px 24px;border-bottom:1px solid var(--b1);background:var(--s1);flex-shrink:0}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--g),var(--b));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 0 20px rgba(0,255,136,0.2)}
+.logo h1{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;letter-spacing:4px;background:linear-gradient(90deg,var(--g),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo p{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--m);letter-spacing:3px}
+.hdr-right{display:flex;align-items:center;gap:12px}
+.pdot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.stxt{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--m)}
+.stxt span{color:var(--g)}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--b1);flex-shrink:0}
+.stat-cell{background:var(--s1);padding:11px 16px;position:relative;overflow:hidden}
+.stat-cell::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent,var(--g));opacity:0.4}
+.slabel{font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:2px;color:var(--m);text-transform:uppercase;margin-bottom:2px}
+.sval{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:700;line-height:1}
+.ssub{font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--m);margin-top:2px}
+.vg{color:var(--g)}.vr{color:var(--r)}.vb{color:var(--b)}.vy{color:var(--y)}.vp{color:var(--p)}
+
+/* LAYOUT */
+.main{flex:1;display:grid;grid-template-columns:1fr 300px;gap:1px;background:var(--b1);overflow:hidden;min-height:0}
+.panel{background:var(--s1);display:flex;flex-direction:column;overflow:hidden}
+.ph{padding:9px 14px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ptitle{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:3px;color:var(--m);text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%}
+.dg{background:var(--g);box-shadow:0 0 6px var(--g)}.dr{background:var(--r);box-shadow:0 0 6px var(--r)}
+.db{background:var(--b);box-shadow:0 0 6px var(--b)}.dy{background:var(--y);box-shadow:0 0 6px var(--y)}
+.dp{background:var(--p);box-shadow:0 0 6px var(--p)}
+.pb{flex:1;overflow-y:auto;padding:14px;scrollbar-width:thin;scrollbar-color:var(--b1) transparent}
+
+/* STEPS */
+.step{display:flex;gap:10px;margin-bottom:14px;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:12px;top:26px;width:1px;height:calc(100% + 2px);background:var(--b1)}
+.snum{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:0.6rem;font-weight:700;flex-shrink:0;position:relative;z-index:1}
+.ng{background:rgba(0,255,136,0.12);color:var(--g);border:1px solid rgba(0,255,136,0.25)}
+.nb{background:rgba(0,170,255,0.12);color:var(--b);border:1px solid rgba(0,170,255,0.25)}
+.nr{background:rgba(255,45,85,0.12);color:var(--r);border:1px solid rgba(255,45,85,0.25)}
+.ny{background:rgba(255,204,0,0.12);color:var(--y);border:1px solid rgba(255,204,0,0.25)}
+.sc h4{font-size:0.82rem;font-weight:700;margin-bottom:2px}
+.sc p{font-size:0.7rem;color:var(--m);line-height:1.5}
+.sc code{font-family:'JetBrains Mono',monospace;font-size:0.6rem;background:var(--s3);border:1px solid var(--b1);border-radius:3px;padding:1px 4px;color:var(--g)}
+
+/* PROGRESS */
+.pwrap{background:var(--s3);border-radius:100px;height:3px;margin:6px 0;overflow:hidden}
+.pbar{height:100%;background:linear-gradient(90deg,var(--g),var(--b));border-radius:100px;width:0%;transition:width 0.5s}
+
+/* TABS */
+.ctabs{display:flex;gap:0;background:var(--s2);border-bottom:1px solid var(--b1);flex-shrink:0;overflow-x:auto}
+.ctab{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:1px;padding:8px 12px;border:none;background:transparent;color:var(--m);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;text-transform:uppercase;white-space:nowrap}
+.ctab.active{color:var(--g);border-bottom-color:var(--g);background:rgba(0,255,136,0.04)}
+.ctab:hover:not(.active){color:var(--t)}
+.carea{flex:1;overflow-y:auto;padding:14px;scrollbar-width:thin;scrollbar-color:var(--b1) transparent}
+.cblock{display:none}.cblock.active{display:block}
+.cdesc{font-size:0.7rem;color:var(--m);margin-bottom:10px;line-height:1.5;padding:7px 10px;background:var(--s2);border-radius:6px;border-left:2px solid var(--g)}
+
+/* CODE */
+pre{background:var(--bg);border:1px solid var(--b1);border-radius:8px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:0.62rem;line-height:1.8;color:#aab;overflow-x:auto;position:relative}
+.cpbtn{position:absolute;top:7px;right:7px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;padding:2px 8px;font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--m);cursor:pointer;transition:all 0.15s}
+.cpbtn:hover{border-color:var(--g);color:var(--g)}
+.kw{color:#a78bfa}.str{color:#00ff88}.cm{color:#2a2a55}.fn{color:#0af}.nm{color:#fb923c}.vr_{color:#ff2d55}
+
+/* LOG */
+.logarea{background:var(--bg);border:1px solid var(--b1);border-radius:7px;padding:8px;height:90px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:0.6rem;line-height:1.8;scrollbar-width:thin;scrollbar-color:var(--b1) transparent}
+.ll.ok{color:var(--g)}.ll.err{color:var(--r)}.ll.inf{color:var(--b)}.ll.wrn{color:var(--y)}
+
+/* USER CARDS */
+.ucard{background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;transition:all 0.15s;animation:si 0.25s ease}
+@keyframes si{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ucard:hover{border-color:var(--b2);background:#0f0f22}
+.ucard.ufollowed{opacity:0.25}
+.uleft{display:flex;align-items:center;gap:9px}
+.av{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1.5px solid var(--b2);flex-shrink:0;background:var(--s3)}
+.av-fallback{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.75rem;color:#fff;flex-shrink:0;border:1.5px solid var(--b2)}
+.a0{background:linear-gradient(135deg,#f43f5e,#ec4899)}
+.a1{background:linear-gradient(135deg,#8b5cf6,#6366f1)}
+.a2{background:linear-gradient(135deg,#06b6d4,#3b82f6)}
+.a3{background:linear-gradient(135deg,#10b981,#06b6d4)}
+.a4{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.a5{background:linear-gradient(135deg,#a855f7,#ec4899)}
+.a6{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.a7{background:linear-gradient(135deg,#0ea5e9,#6366f1)}
+.uname{font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--t);font-weight:600}
+.ufullname{font-size:0.65rem;color:var(--m);margin-top:1px}
+.utags{display:flex;gap:4px;margin-top:2px}
+.utag{font-family:'JetBrains Mono',monospace;font-size:0.48rem;padding:1px 5px;border-radius:100px;letter-spacing:0.5px}
+.tag-private{background:rgba(255,204,0,0.1);color:var(--y);border:1px solid rgba(255,204,0,0.2)}
+.ufbtn{background:rgba(255,45,85,0.08);border:1px solid rgba(255,45,85,0.2);border-radius:5px;padding:3px 9px;font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--r);cursor:pointer;transition:all 0.15s;letter-spacing:1px;flex-shrink:0}
+.ufbtn:hover{background:rgba(255,45,85,0.2);border-color:var(--r)}
+.ufbtn.done{color:var(--m);border-color:var(--b1);background:transparent;pointer-events:none}
+
+/* CHARTS */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.chart-box{background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:12px}
+.chart-title{font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:2px;color:var(--m);text-transform:uppercase;margin-bottom:8px}
+.chart-full{background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:12px;margin-bottom:12px}
+
+/* MISC */
+.empty{text-align:center;padding:40px 16px;color:var(--m)}
+.empty .big{font-size:2.5rem;margin-bottom:8px}
+.empty p{font-family:'JetBrains Mono',monospace;font-size:0.62rem;line-height:1.7}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.6rem;font-weight:600;letter-spacing:1px;cursor:pointer;border:none;transition:all 0.15s;text-transform:uppercase}
+.bg{background:rgba(0,255,136,0.1);color:var(--g);border:1px solid rgba(0,255,136,0.22)}.bg:hover{background:rgba(0,255,136,0.18)}
+.bm{background:var(--s2);color:var(--m);border:1px solid var(--b1)}.bm:hover{color:var(--t);border-color:var(--b2)}
+.brow{display:flex;gap:5px;flex-wrap:wrap}
+.badge{font-family:'JetBrains Mono',monospace;font-size:0.5rem;padding:2px 6px;border-radius:100px;letter-spacing:1px}
+.bdg-r{background:rgba(255,45,85,0.1);color:var(--r);border:1px solid rgba(255,45,85,0.2)}
+.iginput{background:var(--bg);border:1px solid var(--b1);border-radius:6px;padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--t);outline:none;transition:border-color 0.15s;width:100%}
+.iginput:focus{border-color:var(--g)}.iginput::placeholder{color:var(--m)}
+::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b1);border-radius:3px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="20" height="20" rx="6" stroke="white" stroke-width="2"/>
+        <circle cx="12" cy="12" r="4.5" stroke="white" stroke-width="2"/>
+        <circle cx="17.5" cy="6.5" r="1.2" fill="white"/>
+      </svg>
+    </div>
+    <div>
+      <h1>INSTABOT</h1>
+      <p>OTOMASYON PANELİ V6.0 — FOTO + ANALİTİK</p>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div style="text-align:right">
+      <a href="https://www.instagram.com/yasinaslan.officiall/" target="_blank" style="text-decoration:none">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--m);letter-spacing:1px">HAZIRLAYAN</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;font-weight:700;color:var(--g);letter-spacing:1px">YASİN ASLAN</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--m)">@yasinaslan.officiall ↗</div>
+      </a>
+    </div>
+    <div style="width:1px;height:36px;background:var(--b1)"></div>
+    <div style="text-align:right">
+      <div class="stxt" id="s-un" style="color:var(--g);font-size:0.7rem;font-weight:700">—</div>
+      <div class="stxt">hedef hesap</div>
+    </div>
+    <div class="pdot"></div>
+    <div class="stxt"><span id="hst">HAZIR</span></div>
+  </div>
+</header>
+
+<div class="stats-row">
+  <div class="stat-cell" style="--accent:var(--b)">
+    <div class="slabel">Takip Edilen</div>
+    <div class="sval vb" id="s-fo">—</div>
+    <div class="ssub">following</div>
+  </div>
+  <div class="stat-cell" style="--accent:var(--g)">
+    <div class="slabel">Karşılıklı</div>
+    <div class="sval vg" id="s-mutual">—</div>
+    <div class="ssub">seni takip ediyor</div>
+  </div>
+  <div class="stat-cell" style="--accent:var(--r)">
+    <div class="slabel">Takip Etmeyen</div>
+    <div class="sval vr" id="s-nf">—</div>
+    <div class="ssub" id="s-pct">—</div>
+  </div>
+  <div class="stat-cell" style="--accent:var(--p)">
+    <div class="slabel">Bilinmeyen</div>
+    <div class="sval vp" id="s-unk">—</div>
+    <div class="ssub">kontrol edilemedi</div>
+  </div>
+  <div class="stat-cell" style="--accent:var(--y)">
+    <div class="slabel">Unfollow Yapıldı</div>
+    <div class="sval vy" id="s-done">0</div>
+    <div class="ssub" id="s-kal">kalan: —</div>
+  </div>
+  <div class="stat-cell" style="--accent:var(--g)">
+    <div class="slabel">İlerleme</div>
+    <div class="sval vg" id="s-pct2">0%</div>
+    <div class="ssub">unfollow oranı</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- SOL PANEL GİZLİ -->
+  <!-- ORTA PANEL -->
+  <div class="panel">
+    <div class="ctabs">
+      <button class="ctab active" data-tab="grafik">📈 GRAFİKLER</button>
+    </div>
+
+    <div class="carea">
+
+      <!-- ANALİZ GİZLİ -->
+      <div class="cblock" id="tab-analiz"></div>
+
+      <!-- GRAFİKLER -->
+      <div class="cblock active" id="tab-grafik">
+        <div id="grafik-empty" class="empty" style="padding:30px">
+          <div class="big">📈</div>
+          <p>Dashboard açılınca<br>veriler otomatik yüklenir.</p>
+        </div>
+        <div id="grafik-content" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:12px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:12px">
+            <div style="position:relative;flex-shrink:0">
+              <canvas id="donutChart" width="100" height="100"></canvas>
+              <div id="donutCenter" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;color:var(--r)" id="donutPct">—</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.4rem;color:var(--m)">TAKİP ETM.</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:var(--g)"></div><span style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--m)">KARŞILIKLI</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:var(--r)"></div><span style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--m)">TAKİP ETMEYEN</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:var(--p)"></div><span style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--m)">BİLİNMEYEN</span></div>
+            </div>
+          </div>
+          <div class="chart-grid">
+            <div class="chart-box">
+              <div class="chart-title">TAKİP DURUMU</div>
+              <canvas id="barChart" height="140"></canvas>
+            </div>
+            <div class="chart-box">
+              <div class="chart-title">GİZLİ / AÇIK HESAP</div>
+              <canvas id="pieChart" height="140"></canvas>
+            </div>
+          </div>
+          <div class="chart-full">
+            <div class="chart-title">UNFOLLOW İLERLEMESİ</div>
+            <canvas id="progressChart" height="80"></canvas>
+          </div>
+          <div id="top-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
+        </div>
+      </div>
+
+      <!-- UNFOLLOW -->
+      <div class="cblock" id="tab-unfollow">
+        <p class="cdesc">💡 Her çalıştırmada 50 kişi unfollow eder, kaldığı yerden devam eder. 1-2 saat bekleyip tekrar çalıştır.</p>
+        <div style="position:relative">
+          <button class="cpbtn" id="cpbtn-unfollow">KOPYALA</button>
+<pre id="code-unfollow"><span class="cm">// 50'li unfollow — kaldigi yerden devam eder</span>
+(<span class="kw">async</span>()=>{
+  <span class="kw">if</span>(!window.__ig?.nonfollowers?.length){console.error(<span class="str">"Once analiz!"</span>);<span class="kw">return</span>;}
+  <span class="kw">const</span> LIMIT=<span class="nm">50</span>;
+  <span class="kw">const</span> KEY=<span class="str">"ig_uf_"</span>+window.__ig.username;
+  <span class="kw">const</span> done=JSON.parse(localStorage.getItem(KEY)||<span class="str">"[]"</span>);
+  <span class="kw">const</span> dSet=<span class="kw">new</span> Set(done);
+  <span class="kw">const</span> batch=window.__ig.nonfollowers.filter(u=>!dSet.has(u.username)).slice(<span class="nm">0</span>,LIMIT);
+  <span class="kw">const</span> csrf=document.cookie.match(<span class="str">/csrftoken=([^;]+)/</span>)?.[<span class="nm">1</span>]||<span class="str">""</span>;
+  console.log(<span class="str">"Toplam:"</span>,window.__ig.nonfollowers.length,<span class="str">"Yapilan:"</span>,done.length,<span class="str">"Bu tur:"</span>,batch.length);
+  <span class="kw">if</span>(!batch.length){console.log(<span class="str">"Tamamlandi!"</span>);<span class="kw">return</span>;}
+  <span class="kw">let</span> ok=<span class="nm">0</span>,fail=<span class="nm">0</span>;
+  <span class="kw">for</span>(<span class="kw">const</span> user <span class="kw">of</span> batch){
+    <span class="kw">try</span>{
+      <span class="kw">const</span> r=<span class="kw">await</span> fetch(<span class="str">`/api/v1/friendships/destroy/${user.id}/`</span>,{
+        method:<span class="str">"POST"</span>,headers:{
+          <span class="str">"x-ig-app-id"</span>:<span class="str">"936619743392459"</span>,<span class="str">"x-csrftoken"</span>:csrf,
+          <span class="str">"x-requested-with"</span>:<span class="str">"XMLHttpRequest"</span>,<span class="str">"Content-Type"</span>:<span class="str">"application/x-www-form-urlencoded"</span>
+        }
+      });
+      <span class="kw">if</span>(r.ok){ok++;done.push(user.username);localStorage.setItem(KEY,JSON.stringify(done));console.log(<span class="str">"OK ["</span>+(ok+fail)+<span class="str">"/"</span>+batch.length+<span class="str">"] @"</span>+user.username);}
+      <span class="kw">else if</span>(r.status===<span class="nm">429</span>){console.warn(<span class="str">"Rate limit 60sn..."</span>);<span class="kw">await new</span> Promise(r=>setTimeout(r,<span class="nm">60000</span>));}
+      <span class="kw">else</span>{fail++;console.warn(<span class="str">"HATA @"</span>+user.username);}
+    }<span class="kw">catch</span>(e){fail++;}
+    <span class="kw">await new</span> Promise(r=>setTimeout(r,<span class="nm">2000</span>+Math.random()*<span class="nm">2000</span>));
+  }
+  <span class="kw">const</span> kalan=window.__ig.nonfollowers.length-done.length;
+  console.log(<span class="str">"Bitti! OK:"</span>+ok+<span class="str">" Hata:"</span>+fail+<span class="str">" Kalan:"</span>+kalan);
+  <span class="kw">if</span>(kalan><span class="nm">0</span>)console.log(kalan+<span class="str">" kisi kaldi. 1-2 saat bekle."</span>);
+  <span class="kw">else</span> console.log(<span class="str">"Tum liste tamamlandi!"</span>);
+})();</pre>
+        </div>
+      </div>
+
+      <!-- EXPORT -->
+      <div class="cblock" id="tab-export">
+        <p class="cdesc">💡 Analiz sonuçlarını JSON dosyası olarak indir.</p>
+        <div style="position:relative">
+          <button class="cpbtn" id="cpbtn-export">KOPYALA</button>
+<pre id="code-export"><span class="cm">// JSON olarak indir</span>
+(<span class="kw">function</span>(){
+  <span class="kw">if</span>(!window.__ig){console.error(<span class="str">"Once analiz!"</span>);<span class="kw">return</span>;}
+  <span class="kw">const</span> a=document.createElement(<span class="str">"a"</span>);
+  a.href=URL.createObjectURL(<span class="kw">new</span> Blob([JSON.stringify({
+    tarih:<span class="kw">new</span> Date().toISOString(),
+    kullanici:window.__ig.username,
+    following:window.__ig.following.length,
+    takip_etmeyenler:window.__ig.nonfollowers.map(u=>u.username)
+  },<span class="kw">null</span>,<span class="nm">2</span>)],{type:<span class="str">"application/json"</span>}));
+  a.download=<span class="str">`ig_${window.__ig.username}.json`</span>;
+  a.click();
+})();</pre>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LOG -->
+    <div style="padding:8px 14px;border-top:1px solid var(--b1);flex-shrink:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div class="ptitle"><div class="dot db"></div>LOG</div>
+        <div class="brow" style="margin:0">
+          <button class="btn bg" id="btn-show-modal">VERİ YÜKLE</button>
+          <button class="btn bm" id="btn-demo">DEMO</button>
+          <button class="btn bm" id="btn-clear-log">SİL</button>
+        </div>
+      </div>
+      <div class="logarea" id="log"></div>
+    </div>
+  </div>
+
+  <!-- SAĞ PANEL — KULLANICI LİSTESİ -->
+  <div class="panel">
+    <div class="ph">
+      <div class="ptitle"><div class="dot dr"></div>TAKİP ETMEYENLER</div>
+      <span class="badge bdg-r" id="nfc">0</span>
+    </div>
+    <div style="padding:7px 10px;border-bottom:1px solid var(--b1);flex-shrink:0;display:flex;gap:6px">
+      <input class="iginput" id="searchinput" placeholder="🔍 kullanıcı ara..." style="display:none;height:26px;font-size:0.6rem" />
+    </div>
+    <div class="pb" id="nflist-wrap">
+      <div class="empty"><div class="big">👾</div><p>Analiz kodunu<br>çalıştır ve<br>VERİ YÜKLE'ye<br>tıkla.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;align-items:center;justify-content:center">
+  <div style="background:var(--s1);border:1px solid var(--b2);border-radius:14px;padding:24px;width:92%;max-width:480px;box-shadow:0 0 60px rgba(0,255,136,0.1)">
+    <div class="ptitle" style="margin-bottom:12px;font-size:0.7rem"><div class="dot dg"></div>VERİ YÜKLE</div>
+    <p style="font-size:0.7rem;color:var(--m);margin-bottom:6px">Analiz bittikten sonra Console'da çalıştır:</p>
+    <pre style="margin-bottom:10px;font-size:0.65rem;padding:8px">copy(JSON.stringify(window.__ig))</pre>
+    <p style="font-size:0.7rem;color:var(--m);margin-bottom:6px">Otomatik kopyalanır. Aşağıya yapıştır:</p>
+    <textarea id="jsin" style="width:100%;height:90px;background:var(--bg);border:1px solid var(--b2);border-radius:7px;padding:8px;color:var(--t);font-family:'JetBrains Mono',monospace;font-size:0.6rem;resize:none;outline:none;margin-bottom:10px" placeholder='{"username":"...","following":[...],"nonfollowers":[]}'></textarea>
+    <div class="brow" style="margin:0">
+      <button class="btn bg" id="btn-load-json">YÜKLE</button>
+      <button class="btn bm" id="btn-hide-modal">İPTAL</button>
+    </div>
+  </div>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
